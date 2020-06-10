@@ -28,16 +28,7 @@
   <body>
     <div id="cesiumContainer"></div>
     <script>
-      var viewer = new Cesium.Viewer("cesiumContainer", {
-	    baseLayerPicker: true,
-		timeline : false,
-		animation : false,
-		homeButton: false,
-		vrButton: true,
-		geocoder:false,
-		sceneModePicker:false,
-		navigationHelpButton:false}
-	  );
+      var viewer = new Cesium.Viewer("cesiumContainer");
 	  viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
     </script>
   </body>
