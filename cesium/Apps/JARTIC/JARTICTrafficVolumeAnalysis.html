@@ -46,12 +46,6 @@
 		  );
 		  var property = customPropertyObject.properties[propertyName];
 		  var colorado = dataSource.entities.getById("colorado");
-
-		  // Because the population values are so large, we scale them down
-		  // by 50 so they fit on the screen.
-		  // If we didn't need to scale, we could directly assign the property
-		  // to extrudedHeight.
-		  // colorado.polygon.extrudedHeight = scaleProperty(property, 1 / 50.0);
 		  colorado.polygon.extrudedHeight = scaleProperty(property, 1 / 50.0);
 		}
 
@@ -77,10 +71,9 @@
 		dataSource.load("demo.czml");
 		viewer.dataSources.add(dataSource);
 		viewer.zoomTo(dataSource); 
-	  
-	  
+
 	  //var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-	//	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
+	 //	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
 	 // var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 	  //viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
     </script>
