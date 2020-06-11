@@ -30,6 +30,8 @@
     <script>
       var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
 	  
+	  var czml ="demo.czml";
+	  
 	  var dataSource = new Cesium.CzmlDataSource();
 		function scaleProperty(property, scalingFactor) {
 		  // returns a property that scales another property by a constant factor.
@@ -68,7 +70,7 @@
 		  "propertiesMenu"
 		);
 
-		dataSource.load("./demo.czml");
+		dataSource.load(czml);
 		viewer.dataSources.add(dataSource);
 		viewer.zoomTo(dataSource);
 
