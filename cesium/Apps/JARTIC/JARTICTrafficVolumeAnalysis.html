@@ -30,9 +30,8 @@
     <script>
       var viewer = new Cesium.Viewer("cesiumContainer");
 	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-		{ url: "//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", maximumLevel:18}
-	  );
-	  var current_img = viewer.scene.imageryLayers.assImageryProvider(imgPrvdr);
+		{ url: '//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel:18});
+	  var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 	  viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
     </script>
   </body>
