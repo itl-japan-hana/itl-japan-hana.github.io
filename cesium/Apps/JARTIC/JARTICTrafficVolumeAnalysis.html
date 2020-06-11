@@ -29,7 +29,7 @@
     <div id="cesiumContainer"></div>
     <script>
       var viewer = new Cesium.Viewer("cesiumContainer");
-	  var imgPrvdr = new CesiumUrlTemplateImageryProvider(
+	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
 		{ url: "//cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", maximumLevel:18}
 	  );
 	  var current_img = viewer.scene.imageryLayers.assImageryProvider(imgPrvdr);
