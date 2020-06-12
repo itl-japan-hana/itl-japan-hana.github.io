@@ -29,8 +29,7 @@
   <body>
     <div id="cesiumContainer"></div>
     <script>
-      var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
-	  
+ 	  
 	  var czml = [
 		  {
 			id: "document",
@@ -113,10 +112,12 @@
 			},
 		  },
 		];
+
 	  var dataSource = new Cesium.CzmlDataSource();
       dataSource.load(czml);
+      var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
       viewer.dataSources.add(dataSource);
-      viewer.zoomTo(dataSource); //Sandcastle_End
+      viewer.zoomTo(dataSource);
 
 	  //var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
 	 //	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
