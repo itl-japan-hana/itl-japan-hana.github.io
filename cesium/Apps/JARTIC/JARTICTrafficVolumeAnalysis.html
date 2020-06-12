@@ -29,7 +29,6 @@
   <body>
     <div id="cesiumContainer"></div>
     <script>
- 	  
 	  var czml = [
 		  {
 			id: "document",
@@ -113,9 +112,9 @@
 		  },
 		];
 
+      var viewer = new Cesium.Viewer("cesiumContainer");
 	  var dataSource = new Cesium.CzmlDataSource();
       dataSource.load(czml);
-      var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
       viewer.dataSources.add(dataSource);
       viewer.zoomTo(dataSource);
 
