@@ -30,14 +30,14 @@
     <div id="cesiumContainer"></div>
     <script>
       var viewer = new Cesium.Viewer("cesiumContainer");
-	  var dataSource = new Cesium.CzmlDataSource();
+	  var dataSource = new Cesium.GeoJsonDataSource();
 	  dataSource.load("result_tvolmsh.geojson");
       //dataSource.load("demo.czml");
       viewer.dataSources.add(dataSource);
       //viewer.zoomTo(dataSource);
-	  //var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-	 //	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
-	 // var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
+	 	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
+	  var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 	  viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
     </script>
   </body>
