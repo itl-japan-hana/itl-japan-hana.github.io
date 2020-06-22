@@ -114,7 +114,8 @@
 
       var viewer = new Cesium.Viewer("cesiumContainer");
 	  var dataSource = new Cesium.CzmlDataSource();
-      dataSource.load("demo.czml");
+	  dataSource.load("result_tvolmsh.geojson");
+      //dataSource.load("demo.czml");
       viewer.dataSources.add(dataSource);
       viewer.zoomTo(dataSource);
 
