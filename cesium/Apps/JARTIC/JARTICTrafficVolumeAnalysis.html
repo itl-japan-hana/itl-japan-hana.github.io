@@ -33,8 +33,9 @@
 	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
 	 	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
 	  var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
-	  var dataSource = new Cesium.GeoJsonDataSource();
-	  dataSource.load("result_tvolmsh.geojson");
+	  var dataSource = Cesium.CzmlDataSource.load("result_tvolmsh.czml");
+	  //var dataSource = new Cesium.GeoJsonDataSource();
+	  //dataSource.load("result_tvolmsh.geojson");
       //dataSource.load("demo.czml");
       viewer.dataSources.add(dataSource);
       viewer.zoomTo(dataSource);
