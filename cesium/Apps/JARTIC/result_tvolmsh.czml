@@ -2,11 +2,7 @@
   {
     "id": "document",
     "name": "result_tvolmsh",
-    "version": "1.0",
-    "clock": {
-      "interval":"2020-01-03T00:00:00Z/2020-04-30T00:00:00Z",
-      "currentTime":"2020-01-03T00:00:00Z",
-    },
+    "version": "1.0"
   },
 {"id":"41795","name":"52397390","polygon":{"positions":{"cartographicDegrees":[139.375,35.325,0,139.375,35.333333,0,139.3875,35.333333,0,139.3875,35.325,0,139.375,35.325,0]},"material":{"solidColor":{"color":{"rgba":[0, 55, 200, 100]}}},"height":0,"extrudedHeight":10000,"epoch":"2020-04-30T00:00:00Z"}}
 ,{"id":"41796","name":"52397371","polygon":{"positions":{"cartographicDegrees":[139.3875,35.308333,0,139.3875,35.316667,0,139.4,35.316667,0,139.4,35.308333,0,139.3875,35.308333,0]},"material":{"solidColor":{"color":{"rgba":[155, 100, 0, 100]}}},"height":0,"extrudedHeight":10000,"epoch":"2020-01-03T00:00:00Z"}}
