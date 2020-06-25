@@ -28,14 +28,14 @@
 						"rgba":[200, 55, 100, 100]
 					}
 				]
-			},
-			"epoch":"2020-01-03T00:00:00Z"
+			}
 		},
 		"extrudedHeight" : {
 			"number" : 1000
 		},
 		"outline":true,
 		"outlineColor":{"rgba":[255,100,0,255]}
-	}
+	},
+	"epoch":"2020-01-03T00:00:00Z"
 }
 ]
