@@ -18,7 +18,6 @@
 		},
 		"material":{
 			"solidColor":{
-				"epoch":"2020-01-03T00:00:00Z",
 				"color":[
 					{
 						"inerval":"2020-01-03T00:00:00Z/2020-02-03T00:00:00Z",
@@ -39,7 +38,8 @@
 			"number" : 1000
 		},
 		"outline":true,
-		"outlineColor":{"rgba":[255,100,0,255]}
+		"outlineColor":{"rgba":[255,100,0,255]},
+		"epoch":"2020-01-03T00:00:00Z"
 	}
 }
 ]
