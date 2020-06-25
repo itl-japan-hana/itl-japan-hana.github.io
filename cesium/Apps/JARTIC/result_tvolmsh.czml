@@ -19,10 +19,11 @@
 			}
 		},
 		"fill":true,
-		"extrudedHeight":0,
+		"extrudedHeight" : {
+			"number" : 500
+		}
 		"outline":true,
 		"outlineColor":{"rgba":[255,100,0,255]}
 	}
 }
-,{"id":"59310","name":"53393510","polygon":{"positions":{"cartographicDegrees":[139.625,35.591667,0,139.625,35.6,0,139.6375,35.6,0,139.6375,35.591667,0,139.625,35.591667,0]},"material":{"solidColor":{"color":{"rgba":[155, 100, 0, 255]}}}}}
 ]
