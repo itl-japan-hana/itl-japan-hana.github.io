@@ -14,7 +14,7 @@
 		"material":{
 			"solidColor":{
 				"color":{
-					"rgba":[0, 55, 200, 255]
+					"rgba":[0, 55, 200, 100]
 				}
 			}
 		},
