@@ -21,7 +21,7 @@
 		"fill":true,
 		"extrudedHeight" : {
 			"number" : 500
-		}
+		},
 		"outline":true,
 		"outlineColor":{"rgba":[255,100,0,255]}
 	}
