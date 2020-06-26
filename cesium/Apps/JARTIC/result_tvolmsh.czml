@@ -6,7 +6,7 @@
 		"clock": {
 		  "interval":"2020-01-03T00:00:00Z/2020-04-30T00:00:00Z",
 		  "currentTime":"2020-01-03T00:00:00Z",
-		  "multiplier":60,
+		  "multiplier":604800,
 		  "range":"LOOP_STOP"
 		}
 	},
@@ -20,7 +20,6 @@
 			},
 			"material":{
 				"solidColor":{
-					"epoch":"2020-01-03T00:00:00Z",
 					"color":[
 						{
 							"inerval":"2020-01-03T00:00:00Z/2020-02-03T00:00:00Z",
