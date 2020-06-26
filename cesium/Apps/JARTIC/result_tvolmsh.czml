@@ -36,6 +36,9 @@
 						}
 					]
 				}
+			},
+			"extrudedHeight":{
+				"number" : 1000
 			}
 		}
 	}
