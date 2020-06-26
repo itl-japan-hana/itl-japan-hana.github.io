@@ -5,7 +5,9 @@
 		"version": "1.0",
 		"clock": {
 		  "interval":"2020-01-03T00:00:00Z/2020-04-30T00:00:00Z",
-		  "currentTime":"2020-01-03T00:00:00Z"
+		  "currentTime":"2020-01-03T00:00:00Z",
+		  "multiplier":60,
+		  "range":"LOOP_STOP"
 		}
 	},
 	{
@@ -33,9 +35,6 @@
 						}
 					]
 				}
-			},
-			"extrudedHeight":{
-				"number" : 1000
 			}
 		}
 	}
