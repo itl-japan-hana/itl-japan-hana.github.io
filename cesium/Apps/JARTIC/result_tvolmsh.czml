@@ -28,13 +28,11 @@
 						"rgba":[50, 200, 50, 100]
 					}
 				]
-			},
-			"outline":"true",
-			"outlineColor":{"rgba":[255,100,0,255]}
+			}
 		},
 		"extrudedHeight":{
 			"number" : 1000
-		},
+		}
 	}
 }
 ]
