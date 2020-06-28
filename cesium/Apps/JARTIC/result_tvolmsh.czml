@@ -18,7 +18,6 @@
 			"positions":{
 				"cartographicDegrees":[139.6125,35.6,0,139.6125,35.608333,0,139.625,35.608333,0,139.625,35.6,0,139.6125,35.6,0]
 			},
-			"fill":"true",
 			"material":{
 				"solidColor":{
 					"color":[
