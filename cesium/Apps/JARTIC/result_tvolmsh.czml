@@ -36,10 +36,6 @@
 					]
 				}
 			},
-			"outline": true,
-			"outlineColor": {
-				"rgba": [0,157,255,255]
-			},
 			"extrudedHeight":{
 				"number" : 100
 			}
