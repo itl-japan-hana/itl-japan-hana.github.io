@@ -30,7 +30,10 @@
     <script>
       var viewer = new Cesium.Viewer("cesiumContainer",{shouldAnimate: true,});
 	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-	 	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
+	  //grayscale map
+	  	 	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', maximumLevel: 18});
+	 //normal map
+	 //{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
 	  var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 	  var dataSource = Cesium.CzmlDataSource.load("result_tvolmsh.czml");
 	  //var dataSource = new Cesium.GeoJsonDataSource();
