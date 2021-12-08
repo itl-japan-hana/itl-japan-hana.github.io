@@ -10,38 +10,34 @@
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
     />
+    <meta name="cesium-sandcastle-labels" content="CZML">
     <title>NICT Activity Visualization Demo</title>
-    <script src="../../Build/Cesium/Cesium.js"></script>
-    <style>
-      @import url(../../Build/Cesium/Widgets/widgets.css);
-      html,
-      body,
-      #cesiumContainer {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-    </style>
+    <script type="text/javascript" src="../../Apps/Sandcastle/Sandcastle-header.js"></script>
+    <script type="text/javascript" src="../../Build/Cesium/Cesium.js"></script>
   </head>
-  <body>
+  <style>
+	@import url(../../Apps/Sandcastle/templates/bucket.css);
+  </style>
+  <body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
     <div id="cesiumContainer"></div>
-    <script>
-      var viewer = new Cesium.Viewer("cesiumContainer",{shouldAnimate: true,});
-	  var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-	  //grayscale map
-	  	 	{ url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', maximumLevel: 18});
-	 //normal map
-	 //{ url: 'https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', maximumLevel: 18});
-	  var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
-	  var dataSource = Cesium.CzmlDataSource.load("plan.czml");
-	  //var dataSource = new Cesium.GeoJsonDataSource();
-	  //dataSource.load("result_tvolmsh.geojson");
-      //dataSource.load("demo.czml");
-      viewer.dataSources.add(dataSource);
-      //viewer.zoomTo(dataSource);
-	  viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar"></div>
+    <script id="cesium_sandcastle_script">
+		function startup(Cesium) {
+			var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
+			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
+				{ url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', maximumLevel: 18});
+			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+			viewer.dataSources.add(Cesium.CzmlDataSource.load("plan.czml"));
+			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
+			//Sandcastle_End
+			Sandcastle.finishedLoading();
+		}
+		if (typeof Cesium !== 'undefined') {
+			window.startupCalled = true;
+			startup(Cesium);
+		}
     </script>
   </body>
 </html>
