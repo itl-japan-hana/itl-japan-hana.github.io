@@ -1,11 +1,18 @@
 [
   {
     "id": "document",
-    "name": "planczml",
+    "name": "result_tvolmsh",
     "version": "1.0",
+    "clock": {
+      "interval":"2020-01-03T00:00:00Z/2021-04-30T00:00:00Z",
+      "currentTime":"2020-01-03T00:00:00Z",
+      "multiplier":604800,
+      "range":"LOOP_STOP"
+    }
   },
   {
     "id": "0_0",
+	"name": "00prb"
     "position": {
       "epoch": "2021-10-01T05:17:44Z",
       "cartographicDegrees": [
