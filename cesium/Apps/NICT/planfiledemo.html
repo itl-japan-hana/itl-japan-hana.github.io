@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Use correct character set. -->
     <meta charset="utf-8" />
-    <!-- Tell IE to use the latest, best version. -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Make the application on mobile take up the full browser screen and disable user scaling. -->
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
@@ -25,13 +22,13 @@
     <div id="toolbar"></div>
     <script id="cesium_sandcastle_script">
 		function startup(Cesium) {
+		    'use strict';
 			var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
 				{ url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', maximumLevel: 18});
 			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load("plan.czml"));
 			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 45000.0)});
-			//Sandcastle_End
 			Sandcastle.finishedLoading();
 		}
 		if (typeof Cesium !== 'undefined') {
