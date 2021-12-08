@@ -9,7 +9,7 @@
       "multiplier": 60,
       "range": "LOOP_STOP"
     }
-  }  {
+  },{
     "id": "0_1",
     "availability": "2021-10-01T13:56:37Z/2021-10-02T10:20:23Z",
     "position": {
