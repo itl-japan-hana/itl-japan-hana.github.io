@@ -12,7 +12,7 @@
   },
   {
     "id": "0_0",
-    "availability": "2021-10-01T04:00:00Z/2021-10-02T04:00:00Z",
+    "availability": "2021-10-01T00:00:00Z/2021-10-02T04:00:00Z",
     "position": {
       "epoch": "2021-10-01T05:17:44Z",
       "cartographicDegrees": [
