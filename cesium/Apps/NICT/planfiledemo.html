@@ -27,7 +27,7 @@
 				{ url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', maximumLevel: 18});
 			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load("plan.czml"));
-			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 70000.0)});
+			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 150000.0)});
 			Sandcastle.finishedLoading();
 		}
 		if (typeof Cesium !== 'undefined') {
