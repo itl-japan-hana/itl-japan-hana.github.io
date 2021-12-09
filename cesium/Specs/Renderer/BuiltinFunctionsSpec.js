@@ -316,7 +316,9 @@ describe(
     it("has czm_decompressTextureCoordinates", function () {
       var fs =
         "void main() { " +
-        "  gl_FragColor = vec4(czm_decompressTextureCoordinates(8386559.0) == vec2(0.4998779, 0.4998779)); " +
+        "  vec2 coords = czm_decompressTextureCoordinates(8386559.0); " +
+        "  vec2 expected = vec2(0.4998779, 0.4998779);" +
+        "  gl_FragColor = vec4(all(lessThanEqual(abs(coords - expected), vec2(0.00000005)))); " +
         "}";
       expect({
         context: context,
@@ -436,9 +438,9 @@ describe(
     it("has czm_transformPlane", function () {
       var fs =
         "void main() { " +
-        "  mat4 uniformScale2 = mat4(2.0, 0.0, 0.0, 0.0," +
-        "                            0.0, 2.0, 0.0, 0.0," +
-        "                            0.0, 0.0, 2.0, 0.0," +
+        "  mat4 uniformScale2 = mat4(0.5, 0.0, 0.0, 0.0," +
+        "                            0.0, 0.5, 0.0, 0.0," +
+        "                            0.0, 0.0, 0.5, 0.0," +
         "                            0.0, 0.0, 0.0, 1.0);" +
         "  gl_FragColor = vec4(all(equal(czm_transformPlane(vec4(1.0, 0.0, 0.0, 10.0), uniformScale2), vec4(1.0, 0.0, 0.0, 20.0))));" +
         "}";
@@ -450,6 +452,7 @@ describe(
 
     it("has czm_unpackFloat", function () {
       var packed = Cartesian4.packFloat(1);
+      packed = Cartesian4.divideByScalar(packed, 255, packed);
       var vec4 =
         "vec4(" +
         packed.x +

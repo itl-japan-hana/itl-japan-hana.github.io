@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './AttributeCompression-ce9e2d64', './GeometryPipeline-59563fec', './EncodedCartesian3-11790f9c', './IndexDatatype-25023891', './IntersectionTests-4c5c02c7', './Plane-58dba41a', './GeometryInstance-14838b1a', './arrayRemoveDuplicates-0263f42c', './EllipsoidTangentPlane-4d73c4dc', './OrientedBoundingBox-8d441583', './CoplanarPolygonGeometryLibrary-0b1bc542', './ArcType-dc1c5aee', './EllipsoidRhumbLine-e343534b', './PolygonPipeline-086c2430', './PolygonGeometryLibrary-64fcb4f2'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, AttributeCompression, GeometryPipeline, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, GeometryInstance, arrayRemoveDuplicates, EllipsoidTangentPlane, OrientedBoundingBox, CoplanarPolygonGeometryLibrary, ArcType, EllipsoidRhumbLine, PolygonPipeline, PolygonGeometryLibrary) { 'use strict';
+define(['./arrayRemoveDuplicates-cf5c3227', './Transforms-86b6fa28', './Matrix2-91d5b6af', './RuntimeError-346a3079', './ComponentDatatype-f194c48b', './CoplanarPolygonGeometryLibrary-bddbb12e', './when-4bbc8319', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './GeometryInstance-a3cff41c', './GeometryPipeline-e3097c85', './IndexDatatype-ee69f1fd', './PolygonGeometryLibrary-110b8a9d', './combine-83860057', './WebGLConstants-1c8239cc', './OrientedBoundingBox-79e3c3fe', './EllipsoidTangentPlane-164dcfc9', './AxisAlignedBoundingBox-4171efdd', './IntersectionTests-26599c5e', './Plane-4f333bc4', './AttributeCompression-1f6679e1', './EncodedCartesian3-882fbcbd', './ArcType-98ec98bf', './EllipsoidRhumbLine-447d6334', './PolygonPipeline-d65e2b8f'], (function (arrayRemoveDuplicates, Transforms, Matrix2, RuntimeError, ComponentDatatype, CoplanarPolygonGeometryLibrary, when, GeometryAttribute, GeometryAttributes, GeometryInstance, GeometryPipeline, IndexDatatype, PolygonGeometryLibrary, combine, WebGLConstants, OrientedBoundingBox, EllipsoidTangentPlane, AxisAlignedBoundingBox, IntersectionTests, Plane, AttributeCompression, EncodedCartesian3, ArcType, EllipsoidRhumbLine, PolygonPipeline) { 'use strict';
 
   function createGeometryFromPositions(positions) {
     var length = positions.length;
@@ -82,7 +82,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     options = when.defaultValue(options, when.defaultValue.EMPTY_OBJECT);
     var polygonHierarchy = options.polygonHierarchy;
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("options.polygonHierarchy", polygonHierarchy);
+    RuntimeError.Check.defined("options.polygonHierarchy", polygonHierarchy);
     //>>includeEnd('debug');
 
     this._polygonHierarchy = polygonHierarchy;
@@ -107,7 +107,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     options = when.defaultValue(options, when.defaultValue.EMPTY_OBJECT);
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("options.positions", options.positions);
+    RuntimeError.Check.defined("options.positions", options.positions);
     //>>includeEnd('debug');
 
     var newOptions = {
@@ -129,8 +129,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    */
   CoplanarPolygonOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.typeOf.object("value", value);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
@@ -163,7 +163,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     result
   ) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
@@ -198,7 +198,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var outerPositions = polygonHierarchy.positions;
     outerPositions = arrayRemoveDuplicates.arrayRemoveDuplicates(
       outerPositions,
-      Cartesian2.Cartesian3.equalsEpsilon,
+      Matrix2.Cartesian3.equalsEpsilon,
       true
     );
     if (outerPositions.length < 3) {
@@ -245,11 +245,11 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         offset
       );
     }
-    polygonGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(polygonGeometry._ellipsoid);
+    polygonGeometry._ellipsoid = Matrix2.Ellipsoid.clone(polygonGeometry._ellipsoid);
     return CoplanarPolygonOutlineGeometry.createGeometry(polygonGeometry);
   }
 
   return createCoplanarPolygonOutlineGeometry;
 
-});
+}));
 //# sourceMappingURL=createCoplanarPolygonOutlineGeometry.js.map

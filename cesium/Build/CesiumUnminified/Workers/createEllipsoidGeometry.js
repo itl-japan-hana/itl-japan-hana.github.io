@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './IndexDatatype-25023891', './GeometryOffsetAttribute-d746452d', './VertexFormat-4d8b817a', './EllipsoidGeometry-bd57f2da'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, VertexFormat, EllipsoidGeometry) { 'use strict';
+define(['./when-4bbc8319', './EllipsoidGeometry-aa017f9c', './GeometryOffsetAttribute-6a692b56', './RuntimeError-346a3079', './Transforms-86b6fa28', './Matrix2-91d5b6af', './ComponentDatatype-f194c48b', './WebGLConstants-1c8239cc', './combine-83860057', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './IndexDatatype-ee69f1fd', './VertexFormat-f9c1a155'], (function (when, EllipsoidGeometry, GeometryOffsetAttribute, RuntimeError, Transforms, Matrix2, ComponentDatatype, WebGLConstants, combine, GeometryAttribute, GeometryAttributes, IndexDatatype, VertexFormat) { 'use strict';
 
   function createEllipsoidGeometry(ellipsoidGeometry, offset) {
     if (when.defined(offset)) {
@@ -32,5 +32,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createEllipsoidGeometry;
 
-});
+}));
 //# sourceMappingURL=createEllipsoidGeometry.js.map

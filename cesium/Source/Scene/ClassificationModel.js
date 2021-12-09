@@ -16,12 +16,12 @@ import PrimitiveType from "../Core/PrimitiveType.js";
 import RuntimeError from "../Core/RuntimeError.js";
 import Transforms from "../Core/Transforms.js";
 import WebGLConstants from "../Core/WebGLConstants.js";
-import addDefaults from "../ThirdParty/GltfPipeline/addDefaults.js";
-import ForEach from "../ThirdParty/GltfPipeline/ForEach.js";
-import getAccessorByteStride from "../ThirdParty/GltfPipeline/getAccessorByteStride.js";
-import numberOfComponentsForType from "../ThirdParty/GltfPipeline/numberOfComponentsForType.js";
-import parseGlb from "../ThirdParty/GltfPipeline/parseGlb.js";
-import updateVersion from "../ThirdParty/GltfPipeline/updateVersion.js";
+import addDefaults from "./GltfPipeline/addDefaults.js";
+import ForEach from "./GltfPipeline/ForEach.js";
+import getAccessorByteStride from "./GltfPipeline/getAccessorByteStride.js";
+import numberOfComponentsForType from "./GltfPipeline/numberOfComponentsForType.js";
+import parseGlb from "./GltfPipeline/parseGlb.js";
+import updateVersion from "./GltfPipeline/updateVersion.js";
 import when from "../ThirdParty/when.js";
 import Axis from "./Axis.js";
 import ModelLoadResources from "./ModelLoadResources.js";
@@ -646,9 +646,6 @@ function createProgram(model) {
 
   var drawVS = modifyShader(vs, model._vertexShaderLoaded);
   var drawFS = modifyShader(fs, model._classificationShaderLoaded);
-
-  drawVS = ModelUtility.modifyVertexShaderForLogDepth(drawVS, toClip);
-  drawFS = ModelUtility.modifyFragmentShaderForLogDepth(drawFS);
 
   model._shaderProgram = {
     vertexShaderSource: drawVS,

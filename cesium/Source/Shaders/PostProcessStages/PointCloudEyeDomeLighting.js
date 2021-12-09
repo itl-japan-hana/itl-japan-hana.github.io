@@ -59,10 +59,7 @@ void main()\n\
     color.rgb *= shade;\n\
     gl_FragColor = vec4(color);\n\
 \n\
-#ifdef LOG_DEPTH\n\
-    czm_writeLogDepth(1.0 + (czm_projection * vec4(eyeCoordinate.xyz, 1.0)).w);\n\
-#else\n\
-    gl_FragDepthEXT = czm_eyeToWindowCoordinates(vec4(eyeCoordinate.xyz, 1.0)).z;\n\
-#endif\n\
+    // Input and output depth are the same.\n\
+    gl_FragDepthEXT = depthOrLogDepth;\n\
 }\n\
 ";

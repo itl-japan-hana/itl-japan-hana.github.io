@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './IndexDatatype-25023891', './IntersectionTests-4c5c02c7', './Plane-58dba41a', './ArcType-dc1c5aee', './EllipsoidRhumbLine-e343534b', './EllipsoidGeodesic-283092e8', './PolylinePipeline-1f550a4a', './Color-73ca03df'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, IntersectionTests, Plane, ArcType, EllipsoidRhumbLine, EllipsoidGeodesic, PolylinePipeline, Color) { 'use strict';
+define(['./when-4bbc8319', './Matrix2-91d5b6af', './ArcType-98ec98bf', './Transforms-86b6fa28', './Color-0cb15512', './ComponentDatatype-f194c48b', './RuntimeError-346a3079', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './IndexDatatype-ee69f1fd', './PolylinePipeline-3cab578f', './combine-83860057', './WebGLConstants-1c8239cc', './EllipsoidGeodesic-6a52e412', './EllipsoidRhumbLine-447d6334', './IntersectionTests-26599c5e', './Plane-4f333bc4'], (function (when, Matrix2, ArcType, Transforms, Color, ComponentDatatype, RuntimeError, GeometryAttribute, GeometryAttributes, IndexDatatype, PolylinePipeline, combine, WebGLConstants, EllipsoidGeodesic, EllipsoidRhumbLine, IntersectionTests, Plane) { 'use strict';
 
   function interpolateColors(p0, p1, color0, color1, minDistance, array, offset) {
     var numPoints = PolylinePipeline.PolylinePipeline.numberOfPoints(p0, p1, minDistance);
@@ -102,14 +102,14 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(positions) || positions.length < 2) {
-      throw new Check.DeveloperError("At least two positions are required.");
+      throw new RuntimeError.DeveloperError("At least two positions are required.");
     }
     if (
       when.defined(colors) &&
       ((colorsPerVertex && colors.length < positions.length) ||
         (!colorsPerVertex && colors.length < positions.length - 1))
     ) {
-      throw new Check.DeveloperError("colors has an invalid length.");
+      throw new RuntimeError.DeveloperError("colors has an invalid length.");
     }
     //>>includeEnd('debug');
 
@@ -120,19 +120,19 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     this._arcType = when.defaultValue(options.arcType, ArcType.ArcType.GEODESIC);
     this._granularity = when.defaultValue(
       options.granularity,
-      _Math.CesiumMath.RADIANS_PER_DEGREE
+      ComponentDatatype.CesiumMath.RADIANS_PER_DEGREE
     );
-    this._ellipsoid = when.defaultValue(options.ellipsoid, Cartesian2.Ellipsoid.WGS84);
+    this._ellipsoid = when.defaultValue(options.ellipsoid, Matrix2.Ellipsoid.WGS84);
     this._workerName = "createSimplePolylineGeometry";
 
-    var numComponents = 1 + positions.length * Cartesian2.Cartesian3.packedLength;
+    var numComponents = 1 + positions.length * Matrix2.Cartesian3.packedLength;
     numComponents += when.defined(colors) ? 1 + colors.length * Color.Color.packedLength : 1;
 
     /**
      * The number of elements used to pack the object into an array.
      * @type {Number}
      */
-    this.packedLength = numComponents + Cartesian2.Ellipsoid.packedLength + 3;
+    this.packedLength = numComponents + Matrix2.Ellipsoid.packedLength + 3;
   }
 
   /**
@@ -147,10 +147,10 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
   SimplePolylineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(value)) {
-      throw new Check.DeveloperError("value is required");
+      throw new RuntimeError.DeveloperError("value is required");
     }
     if (!when.defined(array)) {
-      throw new Check.DeveloperError("array is required");
+      throw new RuntimeError.DeveloperError("array is required");
     }
     //>>includeEnd('debug');
 
@@ -162,8 +162,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var length = positions.length;
     array[startingIndex++] = length;
 
-    for (i = 0; i < length; ++i, startingIndex += Cartesian2.Cartesian3.packedLength) {
-      Cartesian2.Cartesian3.pack(positions[i], array, startingIndex);
+    for (i = 0; i < length; ++i, startingIndex += Matrix2.Cartesian3.packedLength) {
+      Matrix2.Cartesian3.pack(positions[i], array, startingIndex);
     }
 
     var colors = value._colors;
@@ -174,8 +174,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       Color.Color.pack(colors[i], array, startingIndex);
     }
 
-    Cartesian2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    Matrix2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     array[startingIndex++] = value._colorsPerVertex ? 1.0 : 0.0;
     array[startingIndex++] = value._arcType;
@@ -195,7 +195,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
   SimplePolylineGeometry.unpack = function (array, startingIndex, result) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(array)) {
-      throw new Check.DeveloperError("array is required");
+      throw new RuntimeError.DeveloperError("array is required");
     }
     //>>includeEnd('debug');
 
@@ -206,8 +206,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var length = array[startingIndex++];
     var positions = new Array(length);
 
-    for (i = 0; i < length; ++i, startingIndex += Cartesian2.Cartesian3.packedLength) {
-      positions[i] = Cartesian2.Cartesian3.unpack(array, startingIndex);
+    for (i = 0; i < length; ++i, startingIndex += Matrix2.Cartesian3.packedLength) {
+      positions[i] = Matrix2.Cartesian3.unpack(array, startingIndex);
     }
 
     length = array[startingIndex++];
@@ -217,8 +217,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       colors[i] = Color.Color.unpack(array, startingIndex);
     }
 
-    var ellipsoid = Cartesian2.Ellipsoid.unpack(array, startingIndex);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    var ellipsoid = Matrix2.Ellipsoid.unpack(array, startingIndex);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     var colorsPerVertex = array[startingIndex++] === 1.0;
     var arcType = array[startingIndex++];
@@ -259,7 +259,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    * Computes the geometric representation of a simple polyline, including its vertices, indices, and a bounding sphere.
    *
    * @param {SimplePolylineGeometry} simplePolylineGeometry A description of the polyline.
-   * @returns {Geometry} The computed vertices and indices.
+   * @returns {Geometry|undefined} The computed vertices and indices.
    */
   SimplePolylineGeometry.createGeometry = function (simplePolylineGeometry) {
     var positions = simplePolylineGeometry._positions;
@@ -269,7 +269,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var granularity = simplePolylineGeometry._granularity;
     var ellipsoid = simplePolylineGeometry._ellipsoid;
 
-    var minDistance = _Math.CesiumMath.chordLength(
+    var minDistance = ComponentDatatype.CesiumMath.chordLength(
       granularity,
       ellipsoid.maximumRadius
     );
@@ -289,7 +289,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       var numberOfPointsFunction;
       var generateArcFunction;
       if (arcType === ArcType.ArcType.GEODESIC) {
-        subdivisionSize = _Math.CesiumMath.chordLength(
+        subdivisionSize = ComponentDatatype.CesiumMath.chordLength(
           granularity,
           ellipsoid.maximumRadius
         );
@@ -399,7 +399,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         var p = positions[i];
 
         if (perSegmentColors && i > 0) {
-          Cartesian2.Cartesian3.pack(p, positionValues, positionIndex);
+          Matrix2.Cartesian3.pack(p, positionValues, positionIndex);
           positionIndex += 3;
 
           color = colors[i - 1];
@@ -413,7 +413,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
           break;
         }
 
-        Cartesian2.Cartesian3.pack(p, positionValues, positionIndex);
+        Matrix2.Cartesian3.pack(p, positionValues, positionIndex);
         positionIndex += 3;
 
         if (when.defined(colors)) {
@@ -470,7 +470,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         offset
       );
     }
-    simplePolylineGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(
+    simplePolylineGeometry._ellipsoid = Matrix2.Ellipsoid.clone(
       simplePolylineGeometry._ellipsoid
     );
     return SimplePolylineGeometry.createGeometry(simplePolylineGeometry);
@@ -478,5 +478,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createSimplePolylineGeometry;
 
-});
+}));
 //# sourceMappingURL=createSimplePolylineGeometry.js.map

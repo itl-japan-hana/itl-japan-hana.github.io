@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['exports'], function (exports) { 'use strict';
+define(['exports'], (function (exports) { 'use strict';
 
   /**
    * ArcType defines the path that should be taken connecting vertices.
@@ -35,4 +35,4 @@ define(['exports'], function (exports) { 'use strict';
 
   exports.ArcType = ArcType$1;
 
-});
+}));

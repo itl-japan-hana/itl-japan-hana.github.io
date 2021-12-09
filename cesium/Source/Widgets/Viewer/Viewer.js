@@ -44,6 +44,9 @@ import SelectionIndicator from "../SelectionIndicator/SelectionIndicator.js";
 import subscribeAndEvaluate from "../subscribeAndEvaluate.js";
 import Timeline from "../Timeline/Timeline.js";
 import VRButton from "../VRButton/VRButton.js";
+import Cesium3DTileFeature from "../../Scene/Cesium3DTileFeature.js";
+import JulianDate from "../../Core/JulianDate.js";
+import CesiumMath from "../../Core/Math.js";
 
 var boundingSphereScratch = new BoundingSphere();
 
@@ -53,12 +56,78 @@ function onTimelineScrubfunction(e) {
   clock.shouldAnimate = false;
 }
 
+function getCesium3DTileFeatureDescription(feature) {
+  var propertyNames = feature.getPropertyNames();
+
+  var html = "";
+  propertyNames.forEach(function (propertyName) {
+    var value = feature.getProperty(propertyName);
+    if (defined(value)) {
+      html += "<tr><th>" + propertyName + "</th><td>" + value + "</td></tr>";
+    }
+  });
+
+  if (html.length > 0) {
+    html =
+      '<table class="cesium-infoBox-defaultTable"><tbody>' +
+      html +
+      "</tbody></table>";
+  }
+
+  return html;
+}
+
+function getCesium3DTileFeatureName(feature) {
+  // We need to iterate all property names to find potential
+  // candidates, but since we prefer some property names
+  // over others, we store them in an indexed array
+  // and then use the first defined element in the array
+  // as the preferred choice.
+
+  var i;
+  var possibleNames = [];
+  var propertyNames = feature.getPropertyNames();
+  for (i = 0; i < propertyNames.length; i++) {
+    var propertyName = propertyNames[i];
+    if (/^name$/i.test(propertyName)) {
+      possibleNames[0] = feature.getProperty(propertyName);
+    } else if (/name/i.test(propertyName)) {
+      possibleNames[1] = feature.getProperty(propertyName);
+    } else if (/^title$/i.test(propertyName)) {
+      possibleNames[2] = feature.getProperty(propertyName);
+    } else if (/^(id|identifier)$/i.test(propertyName)) {
+      possibleNames[3] = feature.getProperty(propertyName);
+    } else if (/element/i.test(propertyName)) {
+      possibleNames[4] = feature.getProperty(propertyName);
+    } else if (/(id|identifier)$/i.test(propertyName)) {
+      possibleNames[5] = feature.getProperty(propertyName);
+    }
+  }
+
+  var length = possibleNames.length;
+  for (i = 0; i < length; i++) {
+    var item = possibleNames[i];
+    if (defined(item) && item !== "") {
+      return item;
+    }
+  }
+  return "Unnamed Feature";
+}
+
 function pickEntity(viewer, e) {
   var picked = viewer.scene.pick(e.position);
   if (defined(picked)) {
     var id = defaultValue(picked.id, picked.primitive.id);
     if (id instanceof Entity) {
       return id;
+    }
+
+    if (picked instanceof Cesium3DTileFeature) {
+      return new Entity({
+        name: getCesium3DTileFeatureName(picked),
+        description: getCesium3DTileFeatureDescription(picked),
+        feature: picked,
+      });
     }
   }
 
@@ -68,14 +137,27 @@ function pickEntity(viewer, e) {
   }
 }
 
+var scratchStopTime = new JulianDate();
+
 function trackDataSourceClock(timeline, clock, dataSource) {
   if (defined(dataSource)) {
     var dataSourceClock = dataSource.clock;
     if (defined(dataSourceClock)) {
       dataSourceClock.getValue(clock);
       if (defined(timeline)) {
+        var startTime = dataSourceClock.startTime;
+        var stopTime = dataSourceClock.stopTime;
+        // When the start and stop times are equal, set the timeline to the shortest interval
+        // starting at the start time. This prevents an invalid timeline configuration.
+        if (JulianDate.equals(startTime, stopTime)) {
+          stopTime = JulianDate.addSeconds(
+            startTime,
+            CesiumMath.EPSILON2,
+            scratchStopTime
+          );
+        }
         timeline.updateFromClock();
-        timeline.zoomTo(dataSourceClock.startTime, dataSourceClock.stopTime);
+        timeline.zoomTo(startTime, stopTime);
       }
     }
   }
@@ -235,8 +317,8 @@ function enableVRUI(viewer, enabled) {
  * @property {ProviderViewModel[]} [terrainProviderViewModels=createDefaultTerrainProviderViewModels()] The array of ProviderViewModels to be selectable from the BaseLayerPicker.  This value is only valid if `baseLayerPicker` is set to true.
  * @property {ImageryProvider} [imageryProvider=createWorldImagery()] The imagery provider to use.  This value is only valid if `baseLayerPicker` is set to false.
  * @property {TerrainProvider} [terrainProvider=new EllipsoidTerrainProvider()] The terrain provider to use
- * @property {SkyBox} [skyBox] The skybox used to render the stars.  When <code>undefined</code>, the default stars are used.
- * @property {SkyAtmosphere} [skyAtmosphere] Blue sky, and the glow around the Earth's limb.  Set to <code>false</code> to turn it off.
+ * @property {SkyBox|false} [skyBox] The skybox used to render the stars.  When <code>undefined</code>, the default stars are used. If set to <code>false</code>, no skyBox, Sun, or Moon will be added.
+ * @property {SkyAtmosphere|false} [skyAtmosphere] Blue sky, and the glow around the Earth's limb.  Set to <code>false</code> to turn it off.
  * @property {Element|String} [fullscreenElement=document.body] The element or id to be placed into fullscreen mode when the full screen button is pressed.
  * @property {Boolean} [useDefaultRenderLoop=true] True if this widget should control the render loop, false otherwise.
  * @property {Number} [targetFrameRate] The target frame rate when using the default render loop.
@@ -246,13 +328,12 @@ function enableVRUI(viewer, enabled) {
  * @property {Object} [contextOptions] Context and WebGL creation properties corresponding to <code>options</code> passed to {@link Scene}.
  * @property {SceneMode} [sceneMode=SceneMode.SCENE3D] The initial scene mode.
  * @property {MapProjection} [mapProjection=new GeographicProjection()] The map projection to use in 2D and Columbus View modes.
- * @property {Globe} [globe=new Globe(mapProjection.ellipsoid)] The globe to use in the scene.  If set to <code>false</code>, no globe will be added.
+ * @property {Globe|false} [globe=new Globe(mapProjection.ellipsoid)] The globe to use in the scene.  If set to <code>false</code>, no globe will be added.
  * @property {Boolean} [orderIndependentTranslucency=true] If true and the configuration supports it, use order independent translucency.
  * @property {Element|String} [creditContainer] The DOM element or ID that will contain the {@link CreditDisplay}.  If not specified, the credits are added to the bottom of the widget itself.
  * @property {Element|String} [creditViewport] The DOM element or ID that will contain the credit pop up created by the {@link CreditDisplay}.  If not specified, it will appear over the widget itself.
  * @property {DataSourceCollection} [dataSources=new DataSourceCollection()] The collection of data sources visualized by the widget.  If this parameter is provided,
  *                               the instance is assumed to be owned by the caller and will not be destroyed when the viewer is destroyed.
- * @property {Number} [terrainExaggeration=1.0] A scalar used to exaggerate the terrain. Note that terrain exaggeration will not modify any other primitive as they are positioned relative to the ellipsoid.
  * @property {Boolean} [shadows=false] Determines if shadows are cast by light sources.
  * @property {ShadowMode} [terrainShadows=ShadowMode.RECEIVE_ONLY] Determines if the terrain casts or receives shadows from light sources.
  * @property {MapMode2D} [mapMode2D=MapMode2D.INFINITE_SCROLL] Determines if the 2D map is rotatable or can be scrolled infinitely in the horizontal direction.
@@ -269,7 +350,7 @@ function enableVRUI(viewer, enabled) {
  * @constructor
  *
  * @param {Element|String} container The DOM element or ID that will contain the widget.
- * @param {Viewer.ConstructorOptions} options Object describing initialization options
+ * @param {Viewer.ConstructorOptions} [options] Object describing initialization options
  *
  * @exception {DeveloperError} Element with id "container" does not exist in the document.
  * @exception {DeveloperError} options.selectedImageryProviderViewModel is not available when not using the BaseLayerPicker widget, specify options.imageryProvider instead.
@@ -418,7 +499,6 @@ Either specify options.terrainProvider instead or set options.baseLayerPicker to
       : bottomContainer,
     creditViewport: options.creditViewport,
     scene3DOnly: scene3DOnly,
-    terrainExaggeration: options.terrainExaggeration,
     shadows: options.shadows,
     terrainShadows: options.terrainShadows,
     mapMode2D: options.mapMode2D,
@@ -1376,6 +1456,10 @@ Object.defineProperties(Viewer.prototype, {
   },
   /**
    * Gets or sets the object instance for which to display a selection indicator.
+   *
+   * If a user interactively picks a Cesium3DTilesFeature instance, then this property
+   * will contain a transient Entity instance with a property named "feature" that is
+   * the instance that was picked.
    * @memberof Viewer.prototype
    * @type {Entity | undefined}
    */

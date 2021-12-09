@@ -1,8 +1,7 @@
 import Check from "../Core/Check.js";
 import defined from "../Core/defined.js";
 import DeveloperError from "../Core/DeveloperError.js";
-import loadCRN from "../Core/loadCRN.js";
-import loadKTX from "../Core/loadKTX.js";
+import loadKTX2 from "../Core/loadKTX2.js";
 import Resource from "../Core/Resource.js";
 
 /**
@@ -11,6 +10,7 @@ import Resource from "../Core/Resource.js";
  *
  * @alias ImageryProvider
  * @constructor
+ * @abstract
  *
  * @see ArcGisMapServerImageryProvider
  * @see BingMapsImageryProvider
@@ -36,7 +36,7 @@ function ImageryProvider() {
    * The default alpha blending value of this provider, with 0.0 representing fully transparent and
    * 1.0 representing fully opaque.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultAlpha = undefined;
@@ -45,7 +45,7 @@ function ImageryProvider() {
    * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
    * 1.0 representing fully opaque.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultNightAlpha = undefined;
@@ -54,7 +54,7 @@ function ImageryProvider() {
    * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
    * 1.0 representing fully opaque.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultDayAlpha = undefined;
@@ -63,7 +63,7 @@ function ImageryProvider() {
    * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
    * makes the imagery darker while greater than 1.0 makes it brighter.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultBrightness = undefined;
@@ -72,7 +72,7 @@ function ImageryProvider() {
    * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
    * the contrast while greater than 1.0 increases it.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultContrast = undefined;
@@ -80,7 +80,7 @@ function ImageryProvider() {
   /**
    * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultHue = undefined;
@@ -89,7 +89,7 @@ function ImageryProvider() {
    * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
    * saturation while greater than 1.0 increases it.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultSaturation = undefined;
@@ -97,7 +97,7 @@ function ImageryProvider() {
   /**
    * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultGamma = undefined;
@@ -179,7 +179,7 @@ Object.defineProperties(ImageryProvider.prototype, {
    * Gets the maximum level-of-detail that can be requested.  This function should
    * not be called before {@link ImageryProvider#ready} returns true.
    * @memberof ImageryProvider.prototype
-   * @type {Number}
+   * @type {Number|undefined}
    * @readonly
    */
   maximumLevel: {
@@ -336,8 +336,7 @@ ImageryProvider.prototype.pickFeatures = function (
   DeveloperError.throwInstantiationError();
 };
 
-var ktxRegex = /\.ktx$/i;
-var crnRegex = /\.crn$/i;
+var ktx2Regex = /\.ktx2$/i;
 
 /**
  * Loads an image from a given URL.  If the server referenced by the URL already has
@@ -358,10 +357,8 @@ ImageryProvider.loadImage = function (imageryProvider, url) {
 
   var resource = Resource.createIfNeeded(url);
 
-  if (ktxRegex.test(resource.url)) {
-    return loadKTX(resource);
-  } else if (crnRegex.test(resource.url)) {
-    return loadCRN(resource);
+  if (ktx2Regex.test(resource.url)) {
+    return loadKTX2(resource);
   } else if (
     defined(imageryProvider) &&
     defined(imageryProvider.tileDiscardPolicy)

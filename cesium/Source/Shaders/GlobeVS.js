@@ -7,6 +7,14 @@ attribute vec4 position3DAndHeight;\n\
 attribute vec4 textureCoordAndEncodedNormals;\n\
 #endif\n\
 \n\
+#ifdef GEODETIC_SURFACE_NORMALS\n\
+attribute vec3 geodeticSurfaceNormal;\n\
+#endif\n\
+\n\
+#ifdef EXAGGERATION\n\
+uniform vec2 u_terrainExaggerationAndRelativeHeight;\n\
+#endif\n\
+\n\
 uniform vec3 u_center3D;\n\
 uniform mat4 u_modifiedModelView;\n\
 uniform mat4 u_modifiedModelViewProjection;\n\
@@ -157,6 +165,28 @@ void main()\n\
 #endif\n\
 \n\
     vec3 position3DWC = position + u_center3D;\n\
+\n\
+#ifdef GEODETIC_SURFACE_NORMALS\n\
+    vec3 ellipsoidNormal = geodeticSurfaceNormal;\n\
+#else\n\
+    vec3 ellipsoidNormal = normalize(position3DWC);\n\
+#endif\n\
+\n\
+#if defined(EXAGGERATION) && defined(GEODETIC_SURFACE_NORMALS)\n\
+    float exaggeration = u_terrainExaggerationAndRelativeHeight.x;\n\
+    float relativeHeight = u_terrainExaggerationAndRelativeHeight.y;\n\
+    float newHeight = (height - relativeHeight) * exaggeration + relativeHeight;\n\
+\n\
+    // stop from going through center of earth\n\
+    float minRadius = min(min(czm_ellipsoidRadii.x, czm_ellipsoidRadii.y), czm_ellipsoidRadii.z);\n\
+    newHeight = max(newHeight, -minRadius);\n\
+\n\
+    vec3 offset = ellipsoidNormal * (newHeight - height);\n\
+    position += offset;\n\
+    position3DWC += offset;\n\
+    height = newHeight;\n\
+#endif\n\
+\n\
     gl_Position = getPosition(position, height, textureCoordinates);\n\
 \n\
     v_textureCoordinates = vec3(textureCoordinates, webMercatorT);\n\
@@ -165,6 +195,13 @@ void main()\n\
     v_positionEC = (u_modifiedModelView * vec4(position, 1.0)).xyz;\n\
     v_positionMC = position3DWC;  // position in model coordinates\n\
     vec3 normalMC = czm_octDecode(encodedNormal);\n\
+\n\
+#if defined(EXAGGERATION) && defined(GEODETIC_SURFACE_NORMALS)\n\
+    vec3 projection = dot(normalMC, ellipsoidNormal) * ellipsoidNormal;\n\
+    vec3 rejection = normalMC - projection;\n\
+    normalMC = normalize(projection + rejection * exaggeration);\n\
+#endif\n\
+\n\
     v_normalMC = normalMC;\n\
     v_normalEC = czm_normal3D * v_normalMC;\n\
 #elif defined(SHOW_REFLECTIVE_OCEAN) || defined(ENABLE_DAYNIGHT_SHADING) || defined(GENERATE_POSITION) || defined(HDR)\n\
@@ -185,7 +222,6 @@ void main()\n\
 #ifdef APPLY_MATERIAL\n\
     float northPoleZ = czm_ellipsoidRadii.z;\n\
     vec3 northPolePositionMC = vec3(0.0, 0.0, northPoleZ);\n\
-    vec3 ellipsoidNormal = normalize(v_positionMC); // For a sphere this is correct, but not generally for an ellipsoid.\n\
     vec3 vectorEastMC = normalize(cross(northPolePositionMC - v_positionMC, ellipsoidNormal));\n\
     float dotProd = abs(dot(ellipsoidNormal, v_normalMC));\n\
     v_slope = acos(dotProd);\n\

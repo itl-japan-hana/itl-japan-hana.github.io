@@ -18,21 +18,21 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './AttributeCompression-ce9e2d64', './GeometryPipeline-59563fec', './EncodedCartesian3-11790f9c', './IndexDatatype-25023891', './IntersectionTests-4c5c02c7', './Plane-58dba41a', './GeometryOffsetAttribute-d746452d', './VertexFormat-4d8b817a', './EllipseGeometryLibrary-ee7e52c1', './GeometryInstance-14838b1a', './EllipseGeometry-3d8f762e'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, AttributeCompression, GeometryPipeline, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, GeometryOffsetAttribute, VertexFormat, EllipseGeometryLibrary, GeometryInstance, EllipseGeometry) { 'use strict';
+define(['./Matrix2-91d5b6af', './when-4bbc8319', './EllipseGeometry-1c9076c8', './RuntimeError-346a3079', './ComponentDatatype-f194c48b', './WebGLConstants-1c8239cc', './GeometryOffsetAttribute-6a692b56', './Transforms-86b6fa28', './combine-83860057', './EllipseGeometryLibrary-c30b4a37', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './GeometryInstance-a3cff41c', './GeometryPipeline-e3097c85', './AttributeCompression-1f6679e1', './EncodedCartesian3-882fbcbd', './IndexDatatype-ee69f1fd', './IntersectionTests-26599c5e', './Plane-4f333bc4', './VertexFormat-f9c1a155'], (function (Matrix2, when, EllipseGeometry, RuntimeError, ComponentDatatype, WebGLConstants, GeometryOffsetAttribute, Transforms, combine, EllipseGeometryLibrary, GeometryAttribute, GeometryAttributes, GeometryInstance, GeometryPipeline, AttributeCompression, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, VertexFormat) { 'use strict';
 
   function createEllipseGeometry(ellipseGeometry, offset) {
     if (when.defined(offset)) {
       ellipseGeometry = EllipseGeometry.EllipseGeometry.unpack(ellipseGeometry, offset);
     }
-    ellipseGeometry._center = Cartesian2.Cartesian3.clone(ellipseGeometry._center);
-    ellipseGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(ellipseGeometry._ellipsoid);
+    ellipseGeometry._center = Matrix2.Cartesian3.clone(ellipseGeometry._center);
+    ellipseGeometry._ellipsoid = Matrix2.Ellipsoid.clone(ellipseGeometry._ellipsoid);
     return EllipseGeometry.EllipseGeometry.createGeometry(ellipseGeometry);
   }
 
   return createEllipseGeometry;
 
-});
+}));
 //# sourceMappingURL=createEllipseGeometry.js.map

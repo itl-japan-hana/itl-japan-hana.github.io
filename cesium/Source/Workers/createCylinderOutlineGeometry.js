@@ -1,7 +1,7 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './IndexDatatype-1be7d1f8', './GeometryOffsetAttribute-9c46b133', './CylinderGeometryLibrary-09101d37'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, CylinderGeometryLibrary) { 'use strict';
+define(['./GeometryOffsetAttribute-e8e698d7', './Transforms-de823166', './Matrix2-0e286ffc', './RuntimeError-4fdc4459', './ComponentDatatype-9ed50558', './CylinderGeometryLibrary-5924d4e5', './when-8166c7dd', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './IndexDatatype-797210ca', './combine-a5c4cc47', './WebGLConstants-0664004c'], (function (GeometryOffsetAttribute, Transforms, Matrix2, RuntimeError, ComponentDatatype, CylinderGeometryLibrary, when, GeometryAttribute, GeometryAttributes, IndexDatatype, combine, WebGLConstants) { 'use strict';
 
-  var radiusScratch = new Cartesian2.Cartesian2();
+  var radiusScratch = new Matrix2.Cartesian2();
 
   /**
    * A description of the outline of a cylinder.
@@ -46,15 +46,15 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     );
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.number("options.positions", length);
-    Check.Check.typeOf.number("options.topRadius", topRadius);
-    Check.Check.typeOf.number("options.bottomRadius", bottomRadius);
-    Check.Check.typeOf.number.greaterThanOrEquals("options.slices", slices, 3);
+    RuntimeError.Check.typeOf.number("options.positions", length);
+    RuntimeError.Check.typeOf.number("options.topRadius", topRadius);
+    RuntimeError.Check.typeOf.number("options.bottomRadius", bottomRadius);
+    RuntimeError.Check.typeOf.number.greaterThanOrEquals("options.slices", slices, 3);
     if (
       when.defined(options.offsetAttribute) &&
       options.offsetAttribute === GeometryOffsetAttribute.GeometryOffsetAttribute.TOP
     ) {
-      throw new Check.DeveloperError(
+      throw new RuntimeError.DeveloperError(
         "GeometryOffsetAttribute.TOP is not a supported options.offsetAttribute for this geometry."
       );
     }
@@ -86,8 +86,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   CylinderOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.typeOf.object("value", value);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
@@ -121,7 +121,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   CylinderOutlineGeometry.unpack = function (array, startingIndex, result) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
@@ -227,8 +227,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     radiusScratch.y = Math.max(bottomRadius, topRadius);
 
     var boundingSphere = new Transforms.BoundingSphere(
-      Cartesian2.Cartesian3.ZERO,
-      Cartesian2.Cartesian2.magnitude(radiusScratch)
+      Matrix2.Cartesian3.ZERO,
+      Matrix2.Cartesian2.magnitude(radiusScratch)
     );
 
     if (when.defined(cylinderGeometry._offsetAttribute)) {
@@ -264,4 +264,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createCylinderOutlineGeometry;
 
-});
+}));

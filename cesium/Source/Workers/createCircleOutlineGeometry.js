@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './IndexDatatype-1be7d1f8', './GeometryOffsetAttribute-9c46b133', './EllipseGeometryLibrary-0c6ee6ef', './EllipseOutlineGeometry-d2165319'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, EllipseGeometryLibrary, EllipseOutlineGeometry) { 'use strict';
+define(['./Matrix2-0e286ffc', './RuntimeError-4fdc4459', './when-8166c7dd', './EllipseOutlineGeometry-a1c10798', './ComponentDatatype-9ed50558', './WebGLConstants-0664004c', './GeometryOffsetAttribute-e8e698d7', './Transforms-de823166', './combine-a5c4cc47', './EllipseGeometryLibrary-8f12495f', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './IndexDatatype-797210ca'], (function (Matrix2, RuntimeError, when, EllipseOutlineGeometry, ComponentDatatype, WebGLConstants, GeometryOffsetAttribute, Transforms, combine, EllipseGeometryLibrary, GeometryAttribute, GeometryAttributes, IndexDatatype) { 'use strict';
 
   /**
    * A description of the outline of a circle on the ellipsoid.
@@ -35,7 +35,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var radius = options.radius;
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.number("radius", radius);
+    RuntimeError.Check.typeOf.number("radius", radius);
     //>>includeEnd('debug');
 
     var ellipseGeometryOptions = {
@@ -69,7 +69,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   CircleOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
+    RuntimeError.Check.typeOf.object("value", value);
     //>>includeEnd('debug');
     return EllipseOutlineGeometry.EllipseOutlineGeometry.pack(
       value._ellipseGeometry,
@@ -79,14 +79,14 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   };
 
   var scratchEllipseGeometry = new EllipseOutlineGeometry.EllipseOutlineGeometry({
-    center: new Cartesian2.Cartesian3(),
+    center: new Matrix2.Cartesian3(),
     semiMajorAxis: 1.0,
     semiMinorAxis: 1.0,
   });
   var scratchOptions = {
-    center: new Cartesian2.Cartesian3(),
+    center: new Matrix2.Cartesian3(),
     radius: undefined,
-    ellipsoid: Cartesian2.Ellipsoid.clone(Cartesian2.Ellipsoid.UNIT_SPHERE),
+    ellipsoid: Matrix2.Ellipsoid.clone(Matrix2.Ellipsoid.UNIT_SPHERE),
     height: undefined,
     extrudedHeight: undefined,
     granularity: undefined,
@@ -109,11 +109,11 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       startingIndex,
       scratchEllipseGeometry
     );
-    scratchOptions.center = Cartesian2.Cartesian3.clone(
+    scratchOptions.center = Matrix2.Cartesian3.clone(
       ellipseGeometry._center,
       scratchOptions.center
     );
-    scratchOptions.ellipsoid = Cartesian2.Ellipsoid.clone(
+    scratchOptions.ellipsoid = Matrix2.Ellipsoid.clone(
       ellipseGeometry._ellipsoid,
       scratchOptions.ellipsoid
     );
@@ -147,10 +147,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     if (when.defined(offset)) {
       circleGeometry = CircleOutlineGeometry.unpack(circleGeometry, offset);
     }
-    circleGeometry._ellipseGeometry._center = Cartesian2.Cartesian3.clone(
+    circleGeometry._ellipseGeometry._center = Matrix2.Cartesian3.clone(
       circleGeometry._ellipseGeometry._center
     );
-    circleGeometry._ellipseGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(
+    circleGeometry._ellipseGeometry._ellipsoid = Matrix2.Ellipsoid.clone(
       circleGeometry._ellipseGeometry._ellipsoid
     );
     return CircleOutlineGeometry.createGeometry(circleGeometry);
@@ -158,4 +158,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createCircleOutlineGeometry;
 
-});
+}));

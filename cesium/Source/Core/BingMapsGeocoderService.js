@@ -1,8 +1,9 @@
-import BingMapsApi from "./BingMapsApi.js";
 import Check from "./Check.js";
 import defaultValue from "./defaultValue.js";
 import Rectangle from "./Rectangle.js";
 import Resource from "./Resource.js";
+import defined from "./defined.js";
+import DeveloperError from "./DeveloperError.js";
 
 var url = "https://dev.virtualearth.net/REST/v1/Locations";
 
@@ -12,19 +13,31 @@ var url = "https://dev.virtualearth.net/REST/v1/Locations";
  * @constructor
  *
  * @param {Object} options Object with the following properties:
- * @param {String} [options.key] A key to use with the Bing Maps geocoding service
+ * @param {String} options.key A key to use with the Bing Maps geocoding service
+ * @param {String} [options.culture] A Bing Maps {@link https://docs.microsoft.com/en-us/bingmaps/rest-services/common-parameters-and-types/supported-culture-codes|Culture Code} to return results in a specific culture and language.
  */
 function BingMapsGeocoderService(options) {
   options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-
   var key = options.key;
-  this._key = BingMapsApi.getKey(key);
+  //>>includeStart('debug', pragmas.debug);
+  if (!defined(key)) {
+    throw new DeveloperError("options.key is required.");
+  }
+  //>>includeEnd('debug');
+
+  this._key = key;
+
+  var queryParameters = {
+    key: key,
+  };
+
+  if (defined(options.culture)) {
+    queryParameters.culture = options.culture;
+  }
 
   this._resource = new Resource({
     url: url,
-    queryParameters: {
-      key: this._key,
-    },
+    queryParameters: queryParameters,
   });
 }
 

@@ -2,7 +2,6 @@ import Credit from "../Core/Credit.js";
 import defaultValue from "../Core/defaultValue.js";
 import defined from "../Core/defined.js";
 import DeveloperError from "../Core/DeveloperError.js";
-import MapboxApi from "../Core/MapboxApi.js";
 import Resource from "../Core/Resource.js";
 import UrlTemplateImageryProvider from "./UrlTemplateImageryProvider.js";
 
@@ -19,7 +18,7 @@ var defaultCredit = new Credit(
  * @property {Resource|String} [url='https://api.mapbox.com/styles/v1/'] The Mapbox server url.
  * @property {String} [username='mapbox'] The username of the map account.
  * @property {String} styleId The Mapbox Style ID.
- * @property {String} [accessToken] The public access token for the imagery.
+ * @property {String} accessToken The public access token for the imagery.
  * @property {Number} [tilesize=512] The size of the image tiles.
  * @property {Boolean} [scaleFactor] Determines if tiles are rendered at a @2x scale factor.
  * @property {Ellipsoid} [ellipsoid] The ellipsoid.  If not specified, the WGS84 ellipsoid is used.
@@ -58,20 +57,45 @@ function MapboxStyleImageryProvider(options) {
   }
   //>>includeEnd('debug');
 
+  var accessToken = options.accessToken;
+  //>>includeStart('debug', pragmas.debug);
+  if (!defined(accessToken)) {
+    throw new DeveloperError("options.accessToken is required.");
+  }
+  //>>includeEnd('debug');
+
   /**
    * The default alpha blending value of this provider, with 0.0 representing fully transparent and
    * 1.0 representing fully opaque.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultAlpha = undefined;
 
   /**
+   * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
+   * 1.0 representing fully opaque.
+   *
+   * @type {Number|undefined}
+   * @default undefined
+   */
+  this.defaultNightAlpha = undefined;
+
+  /**
+   * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
+   * 1.0 representing fully opaque.
+   *
+   * @type {Number|undefined}
+   * @default undefined
+   */
+  this.defaultDayAlpha = undefined;
+
+  /**
    * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
    * makes the imagery darker while greater than 1.0 makes it brighter.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultBrightness = undefined;
@@ -80,7 +104,7 @@ function MapboxStyleImageryProvider(options) {
    * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
    * the contrast while greater than 1.0 increases it.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultContrast = undefined;
@@ -88,7 +112,7 @@ function MapboxStyleImageryProvider(options) {
   /**
    * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultHue = undefined;
@@ -97,7 +121,7 @@ function MapboxStyleImageryProvider(options) {
    * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
    * saturation while greater than 1.0 increases it.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultSaturation = undefined;
@@ -105,7 +129,7 @@ function MapboxStyleImageryProvider(options) {
   /**
    * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
    *
-   * @type {Number}
+   * @type {Number|undefined}
    * @default undefined
    */
   this.defaultGamma = undefined;
@@ -130,13 +154,8 @@ function MapboxStyleImageryProvider(options) {
     defaultValue(options.url, "https://api.mapbox.com/styles/v1/")
   );
 
-  var accessToken = MapboxApi.getAccessToken(options.accessToken);
   this._styleId = styleId;
   this._accessToken = accessToken;
-
-  this._accessTokenErrorCredit = Credit.clone(
-    MapboxApi.getErrorCredit(options.accessToken)
-  );
 
   var tilesize = defaultValue(options.tilesize, 512);
   this._tilesize = tilesize;
@@ -265,7 +284,7 @@ Object.defineProperties(MapboxStyleImageryProvider.prototype, {
    * Gets the maximum level-of-detail that can be requested.  This function should
    * not be called before {@link MapboxStyleImageryProvider#ready} returns true.
    * @memberof MapboxStyleImageryProvider.prototype
-   * @type {Number}
+   * @type {Number|undefined}
    * @readonly
    */
   maximumLevel: {
@@ -387,9 +406,7 @@ Object.defineProperties(MapboxStyleImageryProvider.prototype, {
  * @exception {DeveloperError} <code>getTileCredits</code> must not be called before the imagery provider is ready.
  */
 MapboxStyleImageryProvider.prototype.getTileCredits = function (x, y, level) {
-  if (defined(this._accessTokenErrorCredit)) {
-    return [this._accessTokenErrorCredit];
-  }
+  return undefined;
 };
 
 /**

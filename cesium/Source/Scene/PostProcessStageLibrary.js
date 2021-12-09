@@ -21,7 +21,7 @@ import ModifiedReinhardTonemapping from "../Shaders/PostProcessStages/ModifiedRe
 import NightVision from "../Shaders/PostProcessStages/NightVision.js";
 import ReinhardTonemapping from "../Shaders/PostProcessStages/ReinhardTonemapping.js";
 import Silhouette from "../Shaders/PostProcessStages/Silhouette.js";
-import FXAA3_11 from "../ThirdParty/Shaders/FXAA3_11.js";
+import FXAA3_11 from "../Shaders/FXAA3_11.js";
 import AutoExposure from "./AutoExposure.js";
 import PostProcessStage from "./PostProcessStage.js";
 import PostProcessStageComposite from "./PostProcessStageComposite.js";
@@ -222,7 +222,7 @@ PostProcessStageLibrary.isDepthOfFieldSupported = function (scene) {
  * <p>
  * This stage is not supported in 2D.
  * </p>
- * @return {PostProcessStageComposite} A post-process stage that applies an edge detection effect.
+ * @return {PostProcessStage} A post-process stage that applies an edge detection effect.
  *
  * @example
  * // multiple silhouette effects
@@ -235,7 +235,7 @@ PostProcessStageLibrary.isDepthOfFieldSupported = function (scene) {
  * greenEdge.selected = [feature1];
  *
  * // draw edges around feature0 and feature1
- * postProcessStages.add(Cesium.PostProcessLibrary.createSilhouetteEffect([yellowEdge, greenEdge]);
+ * postProcessStages.add(Cesium.PostProcessLibrary.createSilhouetteStage([yellowEdge, greenEdge]);
  */
 PostProcessStageLibrary.createEdgeDetectionStage = function () {
   // unique name generated on call so more than one effect can be added
@@ -337,6 +337,7 @@ function getSilhouetteEdgeDetection(edgeDetectionStages) {
  * <code>color</code> is the color of the highlighted edge. The default is {@link Color#BLACK}.
  * <code>length</code> is the length of the edges in pixels. The default is <code>0.5</code>.
  * </p>
+ * @param {PostProcessStage[]} [edgeDetectionStages] An array of edge detection post process stages.
  * @return {PostProcessStageComposite} A post-process stage that applies a silhouette effect.
  */
 PostProcessStageLibrary.createSilhouetteStage = function (edgeDetectionStages) {

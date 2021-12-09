@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './AttributeCompression-ce9e2d64', './IntersectionTests-4c5c02c7', './Plane-58dba41a', './WebMercatorProjection-c2471d99', './createTaskProcessorWorker', './EllipsoidTangentPlane-4d73c4dc', './OrientedBoundingBox-8d441583', './TerrainEncoding-bae4db55'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, AttributeCompression, IntersectionTests, Plane, WebMercatorProjection, createTaskProcessorWorker, EllipsoidTangentPlane, OrientedBoundingBox, TerrainEncoding) { 'use strict';
+define(['./AxisAlignedBoundingBox-4171efdd', './Transforms-86b6fa28', './Matrix2-91d5b6af', './when-4bbc8319', './TerrainEncoding-304a796a', './ComponentDatatype-f194c48b', './OrientedBoundingBox-79e3c3fe', './RuntimeError-346a3079', './WebMercatorProjection-c196164d', './createTaskProcessorWorker', './combine-83860057', './AttributeCompression-1f6679e1', './WebGLConstants-1c8239cc', './EllipsoidTangentPlane-164dcfc9', './IntersectionTests-26599c5e', './Plane-4f333bc4'], (function (AxisAlignedBoundingBox, Transforms, Matrix2, when, TerrainEncoding, ComponentDatatype, OrientedBoundingBox, RuntimeError, WebMercatorProjection, createTaskProcessorWorker, combine, AttributeCompression, WebGLConstants, EllipsoidTangentPlane, IntersectionTests, Plane) { 'use strict';
 
   var sizeOfUint16 = Uint16Array.BYTES_PER_ELEMENT;
   var sizeOfInt32 = Int32Array.BYTES_PER_ELEMENT;
@@ -30,10 +30,10 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
   var sizeOfDouble = Float64Array.BYTES_PER_ELEMENT;
 
   function indexOfEpsilon(arr, elem, elemType) {
-    elemType = when.defaultValue(elemType, _Math.CesiumMath);
+    elemType = when.defaultValue(elemType, ComponentDatatype.CesiumMath);
     var count = arr.length;
     for (var i = 0; i < count; ++i) {
-      if (elemType.equalsEpsilon(arr[i], elem, _Math.CesiumMath.EPSILON12)) {
+      if (elemType.equalsEpsilon(arr[i], elem, ComponentDatatype.CesiumMath.EPSILON12)) {
         return i;
       }
     }
@@ -45,8 +45,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     parameters,
     transferableObjects
   ) {
-    parameters.ellipsoid = Cartesian2.Ellipsoid.clone(parameters.ellipsoid);
-    parameters.rectangle = Cartesian2.Rectangle.clone(parameters.rectangle);
+    parameters.ellipsoid = Matrix2.Ellipsoid.clone(parameters.ellipsoid);
+    parameters.rectangle = Matrix2.Rectangle.clone(parameters.rectangle);
 
     var statistics = processBuffer(
       parameters.buffer,
@@ -55,6 +55,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       parameters.rectangle,
       parameters.nativeRectangle,
       parameters.exaggeration,
+      parameters.exaggerationRelativeHeight,
       parameters.skirtHeight,
       parameters.includeWebMercatorT,
       parameters.negativeAltitudeExponentBias,
@@ -68,7 +69,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     return {
       vertices: vertices.buffer,
       indices: indices.buffer,
-      numberOfAttributes: statistics.encoding.getStride(),
+      numberOfAttributes: statistics.encoding.stride,
       minimumHeight: statistics.minimumHeight,
       maximumHeight: statistics.maximumHeight,
       boundingSphere3D: statistics.boundingSphere3D,
@@ -84,11 +85,11 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     };
   }
 
-  var scratchCartographic = new Cartesian2.Cartographic();
-  var scratchCartesian = new Cartesian2.Cartesian3();
-  var minimumScratch = new Cartesian2.Cartesian3();
-  var maximumScratch = new Cartesian2.Cartesian3();
-  var matrix4Scratch = new Transforms.Matrix4();
+  var scratchCartographic = new Matrix2.Cartographic();
+  var scratchCartesian = new Matrix2.Cartesian3();
+  var minimumScratch = new Matrix2.Cartesian3();
+  var maximumScratch = new Matrix2.Cartesian3();
+  var matrix4Scratch = new Matrix2.Matrix4();
 
   function processBuffer(
     buffer,
@@ -97,6 +98,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     rectangle,
     nativeRectangle,
     exaggeration,
+    exaggerationRelativeHeight,
     skirtHeight,
     includeWebMercatorT,
     negativeAltitudeExponentBias,
@@ -109,12 +111,12 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var rectangleWidth, rectangleHeight;
 
     if (!when.defined(rectangle)) {
-      geographicWest = _Math.CesiumMath.toRadians(nativeRectangle.west);
-      geographicSouth = _Math.CesiumMath.toRadians(nativeRectangle.south);
-      geographicEast = _Math.CesiumMath.toRadians(nativeRectangle.east);
-      geographicNorth = _Math.CesiumMath.toRadians(nativeRectangle.north);
-      rectangleWidth = _Math.CesiumMath.toRadians(rectangle.width);
-      rectangleHeight = _Math.CesiumMath.toRadians(rectangle.height);
+      geographicWest = ComponentDatatype.CesiumMath.toRadians(nativeRectangle.west);
+      geographicSouth = ComponentDatatype.CesiumMath.toRadians(nativeRectangle.south);
+      geographicEast = ComponentDatatype.CesiumMath.toRadians(nativeRectangle.east);
+      geographicNorth = ComponentDatatype.CesiumMath.toRadians(nativeRectangle.north);
+      rectangleWidth = ComponentDatatype.CesiumMath.toRadians(rectangle.width);
+      rectangleHeight = ComponentDatatype.CesiumMath.toRadians(rectangle.height);
     } else {
       geographicWest = rectangle.west;
       geographicSouth = rectangle.south;
@@ -129,7 +131,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var quadBorderLongitudes = [geographicWest, geographicEast];
 
     var fromENU = Transforms.Transforms.eastNorthUpToFixedFrame(relativeToCenter, ellipsoid);
-    var toENU = Transforms.Matrix4.inverseTransformation(fromENU, matrix4Scratch);
+    var toENU = Matrix2.Matrix4.inverseTransformation(fromENU, matrix4Scratch);
 
     var southMercatorY;
     var oneOverMercatorHeight;
@@ -142,6 +144,9 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         (WebMercatorProjection.WebMercatorProjection.geodeticLatitudeToMercatorAngle(geographicNorth) -
           southMercatorY);
     }
+
+    var hasExaggeration = exaggeration !== 1.0;
+    var includeGeodeticSurfaceNormals = hasExaggeration;
 
     var dv = new DataView(buffer);
 
@@ -169,13 +174,13 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       quadSize = dv.getUint32(o, true);
       o += sizeOfUint32;
 
-      var x = _Math.CesiumMath.toRadians(dv.getFloat64(o, true) * 180.0);
+      var x = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(o, true) * 180.0);
       o += sizeOfDouble;
       if (indexOfEpsilon(quadBorderLongitudes, x) === -1) {
         quadBorderLongitudes.push(x);
       }
 
-      var y = _Math.CesiumMath.toRadians(dv.getFloat64(o, true) * 180.0);
+      var y = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(o, true) * 180.0);
       o += sizeOfDouble;
       if (indexOfEpsilon(quadBorderLatitudes, y) === -1) {
         quadBorderLatitudes.push(y);
@@ -202,6 +207,9 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     var uvs = new Array(size);
     var heights = new Array(size);
     var webMercatorTs = includeWebMercatorT ? new Array(size) : [];
+    var geodeticSurfaceNormals = includeGeodeticSurfaceNormals
+      ? new Array(size)
+      : [];
     var indices = new Array(indicesSize);
 
     // Points are laid out in rows starting at SW, so storing border points as we
@@ -220,17 +228,17 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       offset += sizeOfUint32;
       var startQuad = offset;
 
-      var originX = _Math.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
+      var originX = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
       offset += sizeOfDouble;
 
-      var originY = _Math.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
+      var originY = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
       offset += sizeOfDouble;
 
-      var stepX = _Math.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
+      var stepX = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
       var halfStepX = stepX * 0.5;
       offset += sizeOfDouble;
 
-      var stepY = _Math.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
+      var stepY = ComponentDatatype.CesiumMath.toRadians(dv.getFloat64(offset, true) * 180.0);
       var halfStepY = stepY * 0.5;
       offset += sizeOfDouble;
 
@@ -262,7 +270,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         }
 
         // Height is stored in units of (1/EarthRadius) or (1/6371010.0)
-        height *= 6371010.0 * exaggeration;
+        height *= 6371010.0;
 
         scratchCartographic.height = height;
 
@@ -274,10 +282,10 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
           var index = indexOfEpsilon(
             quadBorderPoints,
             scratchCartographic,
-            Cartesian2.Cartographic
+            Matrix2.Cartographic
           );
           if (index === -1) {
-            quadBorderPoints.push(Cartesian2.Cartographic.clone(scratchCartographic));
+            quadBorderPoints.push(Matrix2.Cartographic.clone(scratchCartographic));
             quadBorderIndices.push(pointOffset);
           } else {
             indicesMapping[i] = quadBorderIndices[index];
@@ -289,22 +297,22 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         if (Math.abs(longitude - geographicWest) < halfStepX) {
           westBorder.push({
             index: pointOffset,
-            cartographic: Cartesian2.Cartographic.clone(scratchCartographic),
+            cartographic: Matrix2.Cartographic.clone(scratchCartographic),
           });
         } else if (Math.abs(longitude - geographicEast) < halfStepX) {
           eastBorder.push({
             index: pointOffset,
-            cartographic: Cartesian2.Cartographic.clone(scratchCartographic),
+            cartographic: Matrix2.Cartographic.clone(scratchCartographic),
           });
         } else if (Math.abs(latitude - geographicSouth) < halfStepY) {
           southBorder.push({
             index: pointOffset,
-            cartographic: Cartesian2.Cartographic.clone(scratchCartographic),
+            cartographic: Matrix2.Cartographic.clone(scratchCartographic),
           });
         } else if (Math.abs(latitude - geographicNorth) < halfStepY) {
           northBorder.push({
             index: pointOffset,
-            cartographic: Cartesian2.Cartographic.clone(scratchCartographic),
+            cartographic: Matrix2.Cartographic.clone(scratchCartographic),
           });
         }
 
@@ -322,18 +330,23 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
             oneOverMercatorHeight;
         }
 
-        Transforms.Matrix4.multiplyByPoint(toENU, pos, scratchCartesian);
+        if (includeGeodeticSurfaceNormals) {
+          var normal = ellipsoid.geodeticSurfaceNormal(pos);
+          geodeticSurfaceNormals[pointOffset] = normal;
+        }
 
-        Cartesian2.Cartesian3.minimumByComponent(scratchCartesian, minimum, minimum);
-        Cartesian2.Cartesian3.maximumByComponent(scratchCartesian, maximum, maximum);
+        Matrix2.Matrix4.multiplyByPoint(toENU, pos, scratchCartesian);
+
+        Matrix2.Cartesian3.minimumByComponent(scratchCartesian, minimum, minimum);
+        Matrix2.Cartesian3.maximumByComponent(scratchCartesian, maximum, maximum);
 
         var u = (longitude - geographicWest) / (geographicEast - geographicWest);
-        u = _Math.CesiumMath.clamp(u, 0.0, 1.0);
+        u = ComponentDatatype.CesiumMath.clamp(u, 0.0, 1.0);
         var v =
           (latitude - geographicSouth) / (geographicNorth - geographicSouth);
-        v = _Math.CesiumMath.clamp(v, 0.0, 1.0);
+        v = ComponentDatatype.CesiumMath.clamp(v, 0.0, 1.0);
 
-        uvs[pointOffset] = new Cartesian2.Cartesian2(u, v);
+        uvs[pointOffset] = new Matrix2.Cartesian2(u, v);
         ++pointOffset;
       }
 
@@ -353,6 +366,9 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     heights.length = pointOffset;
     if (includeWebMercatorT) {
       webMercatorTs.length = pointOffset;
+    }
+    if (includeGeodeticSurfaceNormals) {
+      geodeticSurfaceNormals.length = pointOffset;
     }
 
     var vertexCountWithoutSkirts = pointOffset;
@@ -390,6 +406,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       heights,
       uvs,
       webMercatorTs,
+      geodeticSurfaceNormals,
       indices,
       skirtOptions,
       westBorder,
@@ -402,6 +419,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       heights,
       uvs,
       webMercatorTs,
+      geodeticSurfaceNormals,
       indices,
       skirtOptions,
       southBorder,
@@ -413,6 +431,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       heights,
       uvs,
       webMercatorTs,
+      geodeticSurfaceNormals,
       indices,
       skirtOptions,
       eastBorder,
@@ -425,6 +444,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       heights,
       uvs,
       webMercatorTs,
+      geodeticSurfaceNormals,
       indices,
       skirtOptions,
       northBorder,
@@ -470,16 +490,20 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       minHeight
     );
 
-    var aaBox = new EllipsoidTangentPlane.AxisAlignedBoundingBox(minimum, maximum, relativeToCenter);
+    var aaBox = new AxisAlignedBoundingBox.AxisAlignedBoundingBox(minimum, maximum, relativeToCenter);
     var encoding = new TerrainEncoding.TerrainEncoding(
+      relativeToCenter,
       aaBox,
       skirtOptions.hMin,
       maxHeight,
       fromENU,
       false,
-      includeWebMercatorT
+      includeWebMercatorT,
+      includeGeodeticSurfaceNormals,
+      exaggeration,
+      exaggerationRelativeHeight
     );
-    var vertices = new Float32Array(size * encoding.getStride());
+    var vertices = new Float32Array(size * encoding.stride);
 
     var bufferIndex = 0;
     for (var k = 0; k < size; ++k) {
@@ -490,7 +514,8 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         uvs[k],
         heights[k],
         undefined,
-        webMercatorTs[k]
+        webMercatorTs[k],
+        geodeticSurfaceNormals[k]
       );
     }
 
@@ -548,6 +573,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     heights,
     uvs,
     webMercatorTs,
+    geodeticSurfaceNormals,
     indices,
     skirtOptions,
     borderPoints,
@@ -564,15 +590,15 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
       var longitude = borderCartographic.longitude;
       var latitude = borderCartographic.latitude;
-      latitude = _Math.CesiumMath.clamp(
+      latitude = ComponentDatatype.CesiumMath.clamp(
         latitude,
-        -_Math.CesiumMath.PI_OVER_TWO,
-        _Math.CesiumMath.PI_OVER_TWO
+        -ComponentDatatype.CesiumMath.PI_OVER_TWO,
+        ComponentDatatype.CesiumMath.PI_OVER_TWO
       ); // Don't go over the poles
       var height = borderCartographic.height - skirtOptions.skirtHeight;
       skirtOptions.hMin = Math.min(skirtOptions.hMin, height);
 
-      Cartesian2.Cartographic.fromRadians(longitude, latitude, height, scratchCartographic);
+      Matrix2.Cartographic.fromRadians(longitude, latitude, height, scratchCartographic);
 
       // Adjust sides to angle out
       if (eastOrWest) {
@@ -594,17 +620,20 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       );
       positions.push(pos);
       heights.push(height);
-      uvs.push(Cartesian2.Cartesian2.clone(uvs[borderIndex])); // Copy UVs from border point
+      uvs.push(Matrix2.Cartesian2.clone(uvs[borderIndex])); // Copy UVs from border point
       if (webMercatorTs.length > 0) {
         webMercatorTs.push(webMercatorTs[borderIndex]);
       }
+      if (geodeticSurfaceNormals.length > 0) {
+        geodeticSurfaceNormals.push(geodeticSurfaceNormals[borderIndex]);
+      }
 
-      Transforms.Matrix4.multiplyByPoint(skirtOptions.toENU, pos, scratchCartesian);
+      Matrix2.Matrix4.multiplyByPoint(skirtOptions.toENU, pos, scratchCartesian);
 
       var minimum = skirtOptions.minimum;
       var maximum = skirtOptions.maximum;
-      Cartesian2.Cartesian3.minimumByComponent(scratchCartesian, minimum, minimum);
-      Cartesian2.Cartesian3.maximumByComponent(scratchCartesian, maximum, maximum);
+      Matrix2.Cartesian3.minimumByComponent(scratchCartesian, minimum, minimum);
+      Matrix2.Cartesian3.maximumByComponent(scratchCartesian, maximum, maximum);
 
       var lastBorderPoint = skirtOptions.lastBorderPoint;
       if (when.defined(lastBorderPoint)) {
@@ -628,5 +657,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createVerticesFromGoogleEarthEnterpriseBuffer$1;
 
-});
+}));
 //# sourceMappingURL=createVerticesFromGoogleEarthEnterpriseBuffer.js.map

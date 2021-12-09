@@ -34,11 +34,8 @@ import ClearCommand from "../Renderer/ClearCommand.js";
 import ComputeEngine from "../Renderer/ComputeEngine.js";
 import Context from "../Renderer/Context.js";
 import ContextLimits from "../Renderer/ContextLimits.js";
-import DrawCommand from "../Renderer/DrawCommand.js";
 import Pass from "../Renderer/Pass.js";
 import RenderState from "../Renderer/RenderState.js";
-import ShaderProgram from "../Renderer/ShaderProgram.js";
-import ShaderSource from "../Renderer/ShaderSource.js";
 import BrdfLutGenerator from "./BrdfLutGenerator.js";
 import Camera from "./Camera.js";
 import Cesium3DTilePass from "./Cesium3DTilePass.js";
@@ -72,6 +69,7 @@ import SunLight from "./SunLight.js";
 import SunPostProcess from "./SunPostProcess.js";
 import TweenCollection from "./TweenCollection.js";
 import View from "./View.js";
+import DebugInspector from "./DebugInspector.js";
 
 var requestRenderAfterFrame = function (scene) {
   return function () {
@@ -125,7 +123,7 @@ var requestRenderAfterFrame = function (scene) {
  * @alias Scene
  * @constructor
  *
- * @param {Object} [options] Object with the following properties:
+ * @param {Object} options Object with the following properties:
  * @param {HTMLCanvasElement} options.canvas The HTML canvas element to create the scene for.
  * @param {Object} [options.contextOptions] Context and WebGL creation properties.  See details above.
  * @param {Element} [options.creditContainer] The HTML element in which the credits will be displayed.
@@ -133,7 +131,6 @@ var requestRenderAfterFrame = function (scene) {
  * @param {MapProjection} [options.mapProjection=new GeographicProjection()] The map projection to use in 2D and Columbus View modes.
  * @param {Boolean} [options.orderIndependentTranslucency=true] If true and the configuration supports it, use order independent translucency.
  * @param {Boolean} [options.scene3DOnly=false] If true, optimizes memory use and performance for 3D mode but disables the ability to use 2D or Columbus View.
- * @param {Number} [options.terrainExaggeration=1.0] A scalar used to exaggerate the terrain. Note that terrain exaggeration will not modify any other primitive as they are positioned relative to the ellipsoid.
  * @param {Boolean} [options.shadows=false] Determines if shadows are cast by light sources.
  * @param {MapMode2D} [options.mapMode2D=MapMode2D.INFINITE_SCROLL] Determines if the 2D map is rotatable or can be scrolled infinitely in the horizontal direction.
  * @param {Boolean} [options.requestRenderMode=false] If true, rendering a frame will only occur when needed as determined by changes within the scene. Enabling improves performance of the application, but requires using {@link Scene#requestRender} to render a new frame explicitly in this mode. This will be necessary in many cases after making changes to the scene in other parts of the API. See {@link https://cesium.com/blog/2018/01/24/cesium-scene-rendering-performance/|Improving Performance with Explicit Rendering}.
@@ -262,6 +259,7 @@ function Scene(options) {
   this._postRender = new Event();
 
   this._minimumDisableDepthTestDistance = 0.0;
+  this._debugInspector = new DebugInspector();
 
   /**
    * Exceptions occurring in <code>render</code> are always caught in order to raise the
@@ -614,8 +612,6 @@ function Scene(options) {
 
   this._brdfLutGenerator = new BrdfLutGenerator();
 
-  this._terrainExaggeration = defaultValue(options.terrainExaggeration, 1.0);
-
   this._performanceDisplay = undefined;
   this._debugVolume = undefined;
 
@@ -745,7 +741,7 @@ function Scene(options) {
   this.sphericalHarmonicCoefficients = undefined;
 
   /**
-   * The url to the KTX file containing the specular environment map and convoluted mipmaps for image-based lighting of PBR models.
+   * The url to the KTX2 file containing the specular environment map and convoluted mipmaps for image-based lighting of PBR models.
    * @type {String}
    */
   this.specularEnvironmentMaps = undefined;
@@ -1433,18 +1429,6 @@ Object.defineProperties(Scene.prototype, {
   },
 
   /**
-   * Gets the scalar used to exaggerate the terrain.
-   * @memberof Scene.prototype
-   * @type {Number}
-   * @readonly
-   */
-  terrainExaggeration: {
-    get: function () {
-      return this._terrainExaggeration;
-    },
-  },
-
-  /**
    * When <code>true</code>, splits the scene into two viewports with steroscopic views for the left and right eyes.
    * Used for cardboard and WebVR.
    * @memberof Scene.prototype
@@ -1555,7 +1539,6 @@ Object.defineProperties(Scene.prototype, {
       if (this._logDepthBuffer !== value) {
         this._logDepthBuffer = value;
         this._logDepthBufferDirty = true;
-        this._defaultView.updateFrustums = true;
       }
     },
   },
@@ -1675,8 +1658,14 @@ Scene.prototype.getCompressedTextureFormatSupported = function (format) {
       context.s3tc) ||
     ((format === "WEBGL_compressed_texture_pvrtc" || format === "pvrtc") &&
       context.pvrtc) ||
+    ((format === "WEBGL_compressed_texture_etc" || format === "etc") &&
+      context.etc) ||
     ((format === "WEBGL_compressed_texture_etc1" || format === "etc1") &&
-      context.etc1)
+      context.etc1) ||
+    ((format === "WEBGL_compressed_texture_astc" || format === "astc") &&
+      context.astc) ||
+    ((format === "EXT_texture_compression_bptc" || format === "bc7") &&
+      context.bc7)
   );
 };
 
@@ -1901,7 +1890,6 @@ Scene.prototype.updateFrameState = function () {
     camera.upWC
   );
   frameState.occluder = getOccluder(this);
-  frameState.terrainExaggeration = this._terrainExaggeration;
   frameState.minimumTerrainHeight = 0.0;
   frameState.minimumDisableDepthTestDistance = this._minimumDisableDepthTestDistance;
   frameState.invertClassification = this.invertClassification;
@@ -1914,6 +1902,11 @@ Scene.prototype.updateFrameState = function () {
   frameState.light = this.light;
   frameState.cameraUnderground = this._cameraUnderground;
   frameState.globeTranslucencyState = this._globeTranslucencyState;
+
+  if (defined(this.globe)) {
+    frameState.terrainExaggeration = this.globe.terrainExaggeration;
+    frameState.terrainExaggerationRelativeHeight = this.globe.terrainExaggerationRelativeHeight;
+  }
 
   if (
     defined(this._specularEnvironmentMapAtlas) &&
@@ -1964,126 +1957,6 @@ Scene.prototype.isVisible = function (command, cullingVolume, occluder) {
           !command.boundingVolume.isOccluded(occluder))))
   );
 };
-
-function getAttributeLocations(shaderProgram) {
-  var attributeLocations = {};
-  var attributes = shaderProgram.vertexAttributes;
-  for (var a in attributes) {
-    if (attributes.hasOwnProperty(a)) {
-      attributeLocations[a] = attributes[a].index;
-    }
-  }
-
-  return attributeLocations;
-}
-
-function createDebugFragmentShaderProgram(command, scene, shaderProgram) {
-  var context = scene.context;
-  var sp = defaultValue(shaderProgram, command.shaderProgram);
-  var fs = sp.fragmentShaderSource.clone();
-
-  var targets = [];
-  fs.sources = fs.sources.map(function (source) {
-    source = ShaderSource.replaceMain(source, "czm_Debug_main");
-    var re = /gl_FragData\[(\d+)\]/g;
-    var match;
-    while ((match = re.exec(source)) !== null) {
-      if (targets.indexOf(match[1]) === -1) {
-        targets.push(match[1]);
-      }
-    }
-    return source;
-  });
-  var length = targets.length;
-
-  var newMain = "void main() \n" + "{ \n" + "    czm_Debug_main(); \n";
-
-  var i;
-  if (scene.debugShowCommands) {
-    if (!defined(command._debugColor)) {
-      command._debugColor = Color.fromRandom();
-    }
-    var c = command._debugColor;
-    if (length > 0) {
-      for (i = 0; i < length; ++i) {
-        newMain +=
-          "    gl_FragData[" +
-          targets[i] +
-          "].rgb *= vec3(" +
-          c.red +
-          ", " +
-          c.green +
-          ", " +
-          c.blue +
-          "); \n";
-      }
-    } else {
-      newMain +=
-        "    " +
-        "gl_FragColor" +
-        ".rgb *= vec3(" +
-        c.red +
-        ", " +
-        c.green +
-        ", " +
-        c.blue +
-        "); \n";
-    }
-  }
-
-  if (scene.debugShowFrustums) {
-    // Support up to three frustums.  If a command overlaps all
-    // three, it's code is not changed.
-    var r = command.debugOverlappingFrustums & (1 << 0) ? "1.0" : "0.0";
-    var g = command.debugOverlappingFrustums & (1 << 1) ? "1.0" : "0.0";
-    var b = command.debugOverlappingFrustums & (1 << 2) ? "1.0" : "0.0";
-    if (length > 0) {
-      for (i = 0; i < length; ++i) {
-        newMain +=
-          "    gl_FragData[" +
-          targets[i] +
-          "].rgb *= vec3(" +
-          r +
-          ", " +
-          g +
-          ", " +
-          b +
-          "); \n";
-      }
-    } else {
-      newMain +=
-        "    " +
-        "gl_FragColor" +
-        ".rgb *= vec3(" +
-        r +
-        ", " +
-        g +
-        ", " +
-        b +
-        "); \n";
-    }
-  }
-
-  newMain += "}";
-
-  fs.sources.push(newMain);
-
-  var attributeLocations = getAttributeLocations(sp);
-
-  return ShaderProgram.fromCache({
-    context: context,
-    vertexShaderSource: sp.vertexShaderSource,
-    fragmentShaderSource: fs,
-    attributeLocations: attributeLocations,
-  });
-}
-
-function executeDebugCommand(command, scene, passState) {
-  var debugCommand = DrawCommand.shallowClone(command);
-  debugCommand.shaderProgram = createDebugFragmentShaderProgram(command, scene);
-  debugCommand.execute(scene.context, passState);
-  debugCommand.shaderProgram.destroy();
-}
 
 var transformFrom2D = new Matrix4(
   0.0,
@@ -2261,7 +2134,11 @@ function executeCommand(command, scene, context, passState, debugFramebuffer) {
   }
 
   if (scene.debugShowCommands || scene.debugShowFrustums) {
-    executeDebugCommand(command, scene, passState);
+    scene._debugInspector.executeDebugShowFrustumsCommand(
+      scene,
+      command,
+      passState
+    );
     return;
   }
 
@@ -2775,6 +2652,28 @@ function executeCommands(scene, passState) {
       commands,
       invertClassification
     );
+
+    // Classification for translucent 3D Tiles
+    var has3DTilesClassificationCommands =
+      frustumCommands.indices[Pass.CESIUM_3D_TILE_CLASSIFICATION] > 0;
+    if (
+      has3DTilesClassificationCommands &&
+      view.translucentTileClassification.isSupported()
+    ) {
+      view.translucentTileClassification.executeTranslucentCommands(
+        scene,
+        executeCommand,
+        passState,
+        commands,
+        globeDepth.framebuffer
+      );
+      view.translucentTileClassification.executeClassificationCommands(
+        scene,
+        executeCommand,
+        passState,
+        frustumCommands
+      );
+    }
 
     if (
       context.depthTexture &&
@@ -3663,6 +3562,14 @@ Scene.prototype.resolveFramebuffers = function (passState) {
     view.oit.execute(context, passState);
   }
 
+  var translucentTileClassification = view.translucentTileClassification;
+  if (
+    translucentTileClassification.hasTranslucentDepth &&
+    translucentTileClassification.isSupported()
+  ) {
+    translucentTileClassification.execute(this, passState);
+  }
+
   if (usePostProcess) {
     var inputFramebuffer = sceneFramebuffer;
     if (useGlobeDepthFramebuffer && !useOIT) {
@@ -4372,7 +4279,7 @@ Scene.prototype.clampToHeight = function (
  * @param {Cartographic[]} positions The cartographic positions to update with sampled heights.
  * @param {Object[]} [objectsToExclude] A list of primitives, entities, or 3D Tiles features to not sample height from.
  * @param {Number} [width=0.1] Width of the intersection volume in meters.
- * @returns {Promise.<Number[]>} A promise that resolves to the provided list of positions when the query has completed.
+ * @returns {Promise.<Cartographic[]>} A promise that resolves to the provided list of positions when the query has completed.
  *
  * @example
  * var positions = [

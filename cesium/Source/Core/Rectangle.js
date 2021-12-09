@@ -57,6 +57,7 @@ Object.defineProperties(Rectangle.prototype, {
    * Gets the width of the rectangle in radians.
    * @memberof Rectangle.prototype
    * @type {Number}
+   * @readonly
    */
   width: {
     get: function () {
@@ -68,6 +69,7 @@ Object.defineProperties(Rectangle.prototype, {
    * Gets the height of the rectangle in radians.
    * @memberof Rectangle.prototype
    * @type {Number}
+   * @readonly
    */
   height: {
     get: function () {
@@ -738,10 +740,10 @@ Rectangle.union = function (rectangle, otherRectangle, result) {
     rectangleWest += CesiumMath.TWO_PI;
   }
 
-  var west = CesiumMath.convertLongitudeRange(
+  var west = CesiumMath.negativePiToPi(
     Math.min(rectangleWest, otherRectangleWest)
   );
-  var east = CesiumMath.convertLongitudeRange(
+  var east = CesiumMath.negativePiToPi(
     Math.max(rectangleEast, otherRectangleEast)
   );
 

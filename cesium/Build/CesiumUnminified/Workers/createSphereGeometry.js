@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './IndexDatatype-25023891', './GeometryOffsetAttribute-d746452d', './VertexFormat-4d8b817a', './EllipsoidGeometry-bd57f2da'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, VertexFormat, EllipsoidGeometry) { 'use strict';
+define(['./when-4bbc8319', './Matrix2-91d5b6af', './RuntimeError-346a3079', './EllipsoidGeometry-aa017f9c', './VertexFormat-f9c1a155', './ComponentDatatype-f194c48b', './WebGLConstants-1c8239cc', './GeometryOffsetAttribute-6a692b56', './Transforms-86b6fa28', './combine-83860057', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './IndexDatatype-ee69f1fd'], (function (when, Matrix2, RuntimeError, EllipsoidGeometry, VertexFormat, ComponentDatatype, WebGLConstants, GeometryOffsetAttribute, Transforms, combine, GeometryAttribute, GeometryAttributes, IndexDatatype) { 'use strict';
 
   /**
    * A description of a sphere centered at the origin.
@@ -49,7 +49,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    */
   function SphereGeometry(options) {
     var radius = when.defaultValue(options.radius, 1.0);
-    var radii = new Cartesian2.Cartesian3(radius, radius, radius);
+    var radii = new Matrix2.Cartesian3(radius, radius, radius);
     var ellipsoidOptions = {
       radii: radii,
       stackPartitions: options.stackPartitions,
@@ -78,7 +78,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    */
   SphereGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
+    RuntimeError.Check.typeOf.object("value", value);
     //>>includeEnd('debug');
 
     return EllipsoidGeometry.EllipsoidGeometry.pack(value._ellipsoidGeometry, array, startingIndex);
@@ -87,7 +87,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
   var scratchEllipsoidGeometry = new EllipsoidGeometry.EllipsoidGeometry();
   var scratchOptions = {
     radius: undefined,
-    radii: new Cartesian2.Cartesian3(),
+    radii: new Matrix2.Cartesian3(),
     vertexFormat: new VertexFormat.VertexFormat(),
     stackPartitions: undefined,
     slicePartitions: undefined,
@@ -119,7 +119,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       return new SphereGeometry(scratchOptions);
     }
 
-    Cartesian2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
+    Matrix2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
     result._ellipsoidGeometry = new EllipsoidGeometry.EllipsoidGeometry(scratchOptions);
     return result;
   };
@@ -128,7 +128,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    * Computes the geometric representation of a sphere, including its vertices, indices, and a bounding sphere.
    *
    * @param {SphereGeometry} sphereGeometry A description of the sphere.
-   * @returns {Geometry} The computed vertices and indices.
+   * @returns {Geometry|undefined} The computed vertices and indices.
    */
   SphereGeometry.createGeometry = function (sphereGeometry) {
     return EllipsoidGeometry.EllipsoidGeometry.createGeometry(sphereGeometry._ellipsoidGeometry);
@@ -143,5 +143,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createSphereGeometry;
 
-});
+}));
 //# sourceMappingURL=createSphereGeometry.js.map

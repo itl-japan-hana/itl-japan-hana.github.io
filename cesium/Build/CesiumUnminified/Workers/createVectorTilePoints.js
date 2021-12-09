@@ -18,18 +18,18 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './AttributeCompression-ce9e2d64', './createTaskProcessorWorker'], function (when, Check, _Math, Cartesian2, AttributeCompression, createTaskProcessorWorker) { 'use strict';
+define(['./AttributeCompression-1f6679e1', './Matrix2-91d5b6af', './ComponentDatatype-f194c48b', './createTaskProcessorWorker', './RuntimeError-346a3079', './when-4bbc8319', './WebGLConstants-1c8239cc'], (function (AttributeCompression, Matrix2, ComponentDatatype, createTaskProcessorWorker, RuntimeError, when, WebGLConstants) { 'use strict';
 
   var maxShort = 32767;
 
-  var scratchBVCartographic = new Cartesian2.Cartographic();
-  var scratchEncodedPosition = new Cartesian2.Cartesian3();
+  var scratchBVCartographic = new Matrix2.Cartographic();
+  var scratchEncodedPosition = new Matrix2.Cartesian3();
 
-  var scratchRectangle = new Cartesian2.Rectangle();
-  var scratchEllipsoid = new Cartesian2.Ellipsoid();
+  var scratchRectangle = new Matrix2.Rectangle();
+  var scratchEllipsoid = new Matrix2.Ellipsoid();
   var scratchMinMaxHeights = {
     min: undefined,
     max: undefined,
@@ -42,10 +42,10 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
     scratchMinMaxHeights.min = packedBuffer[offset++];
     scratchMinMaxHeights.max = packedBuffer[offset++];
 
-    Cartesian2.Rectangle.unpack(packedBuffer, offset, scratchRectangle);
-    offset += Cartesian2.Rectangle.packedLength;
+    Matrix2.Rectangle.unpack(packedBuffer, offset, scratchRectangle);
+    offset += Matrix2.Rectangle.packedLength;
 
-    Cartesian2.Ellipsoid.unpack(packedBuffer, offset, scratchEllipsoid);
+    Matrix2.Ellipsoid.unpack(packedBuffer, offset, scratchEllipsoid);
   }
 
   function createVectorTilePoints(parameters, transferableObjects) {
@@ -72,11 +72,11 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       var v = vBuffer[i];
       var h = heightBuffer[i];
 
-      var lon = _Math.CesiumMath.lerp(rectangle.west, rectangle.east, u / maxShort);
-      var lat = _Math.CesiumMath.lerp(rectangle.south, rectangle.north, v / maxShort);
-      var alt = _Math.CesiumMath.lerp(minimumHeight, maximumHeight, h / maxShort);
+      var lon = ComponentDatatype.CesiumMath.lerp(rectangle.west, rectangle.east, u / maxShort);
+      var lat = ComponentDatatype.CesiumMath.lerp(rectangle.south, rectangle.north, v / maxShort);
+      var alt = ComponentDatatype.CesiumMath.lerp(minimumHeight, maximumHeight, h / maxShort);
 
-      var cartographic = Cartesian2.Cartographic.fromRadians(
+      var cartographic = Matrix2.Cartographic.fromRadians(
         lon,
         lat,
         alt,
@@ -86,7 +86,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
         cartographic,
         scratchEncodedPosition
       );
-      Cartesian2.Cartesian3.pack(decodedPosition, decoded, i * 3);
+      Matrix2.Cartesian3.pack(decodedPosition, decoded, i * 3);
     }
 
     transferableObjects.push(decoded.buffer);
@@ -99,5 +99,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createVectorTilePoints$1;
 
-});
+}));
 //# sourceMappingURL=createVectorTilePoints.js.map

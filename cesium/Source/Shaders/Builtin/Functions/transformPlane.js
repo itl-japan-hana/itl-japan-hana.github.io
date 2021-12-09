@@ -1,10 +1,17 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "vec4 czm_transformPlane(vec4 clippingPlane, mat4 transform) {\n\
-    vec3 transformedDirection = normalize((transform * vec4(clippingPlane.xyz, 0.0)).xyz);\n\
-    vec3 transformedPosition = (transform * vec4(clippingPlane.xyz * -clippingPlane.w, 1.0)).xyz;\n\
-    vec4 transformedPlane;\n\
-    transformedPlane.xyz = transformedDirection;\n\
-    transformedPlane.w = -dot(transformedDirection, transformedPosition);\n\
-    return transformedPlane;\n\
+export default "/**\n\
+ * Transforms a plane.\n\
+ * \n\
+ * @name czm_transformPlane\n\
+ * @glslFunction\n\
+ *\n\
+ * @param {vec4} plane The plane in Hessian Normal Form.\n\
+ * @param {mat4} transform The inverse-transpose of a transformation matrix.\n\
+ */\n\
+vec4 czm_transformPlane(vec4 plane, mat4 transform) {\n\
+    vec4 transformedPlane = transform * plane;\n\
+    // Convert the transformed plane to Hessian Normal Form\n\
+    float normalMagnitude = length(transformedPlane.xyz);\n\
+    return transformedPlane / normalMagnitude;\n\
 }\n\
 ";

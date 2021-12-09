@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './AttributeCompression-c6a20ed1', './IntersectionTests-a2506214', './Plane-cd2fd16b', './WebMercatorProjection-7fb94d88', './createTaskProcessorWorker', './EllipsoidTangentPlane-941bac8f', './OrientedBoundingBox-41937a64', './TerrainEncoding-fe139b8d'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, AttributeCompression, IntersectionTests, Plane, WebMercatorProjection, createTaskProcessorWorker, EllipsoidTangentPlane, OrientedBoundingBox, TerrainEncoding) { 'use strict';
+define(['./Matrix2-0e286ffc', './AxisAlignedBoundingBox-96fb2a8b', './Transforms-de823166', './when-8166c7dd', './RuntimeError-4fdc4459', './TerrainEncoding-6e967e8e', './ComponentDatatype-9ed50558', './OrientedBoundingBox-7045a823', './WebMercatorProjection-37aaa17f', './createTaskProcessorWorker', './combine-a5c4cc47', './AttributeCompression-a3d02c34', './WebGLConstants-0664004c', './EllipsoidTangentPlane-892d7b0a', './IntersectionTests-30f5d388', './Plane-456cf3fd'], (function (Matrix2, AxisAlignedBoundingBox, Transforms, when, RuntimeError, TerrainEncoding, ComponentDatatype, OrientedBoundingBox, WebMercatorProjection, createTaskProcessorWorker, combine, AttributeCompression, WebGLConstants, EllipsoidTangentPlane, IntersectionTests, Plane) { 'use strict';
 
   /**
    * The encoding that is used for a heightmap
@@ -50,10 +50,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     isBigEndian: false,
   });
 
-  var cartesian3Scratch = new Cartesian2.Cartesian3();
-  var matrix4Scratch = new Transforms.Matrix4();
-  var minimumScratch = new Cartesian2.Cartesian3();
-  var maximumScratch = new Cartesian2.Cartesian3();
+  var cartesian3Scratch = new Matrix2.Cartesian3();
+  var matrix4Scratch = new Matrix2.Matrix4();
+  var minimumScratch = new Matrix2.Cartesian3();
+  var maximumScratch = new Matrix2.Cartesian3();
 
   /**
    * Fills an array of vertices from a heightmap image.
@@ -67,6 +67,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    *                 a heightmap with a geographic projection, this is degrees.  For the web mercator
    *                 projection, this is meters.
    * @param {Number} [options.exaggeration=1.0] The scale used to exaggerate the terrain.
+   * @param {Number} [options.exaggerationRelativeHeight=0.0] The height from which terrain is exaggerated.
    * @param {Rectangle} [options.rectangle] The rectangle covered by the heightmap, in geodetic coordinates with north, south, east and
    *                 west properties in radians.  Either rectangle or nativeRectangle must be provided.  If both
    *                 are provided, they're assumed to be consistent.
@@ -122,21 +123,21 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    * });
    *
    * var encoding = statistics.encoding;
-   * var position = encoding.decodePosition(statistics.vertices, index * encoding.getStride());
+   * var position = encoding.decodePosition(statistics.vertices, index);
    */
   HeightmapTessellator.computeVertices = function (options) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(options) || !when.defined(options.heightmap)) {
-      throw new Check.DeveloperError("options.heightmap is required.");
+      throw new RuntimeError.DeveloperError("options.heightmap is required.");
     }
     if (!when.defined(options.width) || !when.defined(options.height)) {
-      throw new Check.DeveloperError("options.width and options.height are required.");
+      throw new RuntimeError.DeveloperError("options.width and options.height are required.");
     }
     if (!when.defined(options.nativeRectangle)) {
-      throw new Check.DeveloperError("options.nativeRectangle is required.");
+      throw new RuntimeError.DeveloperError("options.nativeRectangle is required.");
     }
     if (!when.defined(options.skirtHeight)) {
-      throw new Check.DeveloperError("options.skirtHeight is required.");
+      throw new RuntimeError.DeveloperError("options.skirtHeight is required.");
     }
     //>>includeEnd('debug');
 
@@ -150,27 +151,28 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var sqrt = Math.sqrt;
     var atan = Math.atan;
     var exp = Math.exp;
-    var piOverTwo = _Math.CesiumMath.PI_OVER_TWO;
-    var toRadians = _Math.CesiumMath.toRadians;
+    var piOverTwo = ComponentDatatype.CesiumMath.PI_OVER_TWO;
+    var toRadians = ComponentDatatype.CesiumMath.toRadians;
 
     var heightmap = options.heightmap;
     var width = options.width;
     var height = options.height;
     var skirtHeight = options.skirtHeight;
+    var hasSkirts = skirtHeight > 0.0;
 
     var isGeographic = when.defaultValue(options.isGeographic, true);
-    var ellipsoid = when.defaultValue(options.ellipsoid, Cartesian2.Ellipsoid.WGS84);
+    var ellipsoid = when.defaultValue(options.ellipsoid, Matrix2.Ellipsoid.WGS84);
 
     var oneOverGlobeSemimajorAxis = 1.0 / ellipsoid.maximumRadius;
 
-    var nativeRectangle = options.nativeRectangle;
+    var nativeRectangle = Matrix2.Rectangle.clone(options.nativeRectangle);
+    var rectangle = Matrix2.Rectangle.clone(options.rectangle);
 
     var geographicWest;
     var geographicSouth;
     var geographicEast;
     var geographicNorth;
 
-    var rectangle = options.rectangle;
     if (!when.defined(rectangle)) {
       if (isGeographic) {
         geographicWest = toRadians(nativeRectangle.west);
@@ -196,9 +198,16 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var relativeToCenter = options.relativeToCenter;
     var hasRelativeToCenter = when.defined(relativeToCenter);
-    relativeToCenter = hasRelativeToCenter ? relativeToCenter : Cartesian2.Cartesian3.ZERO;
-    var exaggeration = when.defaultValue(options.exaggeration, 1.0);
+    relativeToCenter = hasRelativeToCenter ? relativeToCenter : Matrix2.Cartesian3.ZERO;
     var includeWebMercatorT = when.defaultValue(options.includeWebMercatorT, false);
+
+    var exaggeration = when.defaultValue(options.exaggeration, 1.0);
+    var exaggerationRelativeHeight = when.defaultValue(
+      options.exaggerationRelativeHeight,
+      0.0
+    );
+    var hasExaggeration = exaggeration !== 1.0;
+    var includeGeodeticSurfaceNormals = hasExaggeration;
 
     var structure = when.defaultValue(
       options.structure,
@@ -229,8 +238,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       HeightmapTessellator.DEFAULT_STRUCTURE.isBigEndian
     );
 
-    var rectangleWidth = Cartesian2.Rectangle.computeWidth(nativeRectangle);
-    var rectangleHeight = Cartesian2.Rectangle.computeHeight(nativeRectangle);
+    var rectangleWidth = Matrix2.Rectangle.computeWidth(nativeRectangle);
+    var rectangleHeight = Matrix2.Rectangle.computeHeight(nativeRectangle);
 
     var granularityX = rectangleWidth / (width - 1);
     var granularityY = rectangleHeight / (height - 1);
@@ -249,7 +258,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var maximumHeight = -65536.0;
 
     var fromENU = Transforms.Transforms.eastNorthUpToFixedFrame(relativeToCenter, ellipsoid);
-    var toENU = Transforms.Matrix4.inverseTransformation(fromENU, matrix4Scratch);
+    var toENU = Matrix2.Matrix4.inverseTransformation(fromENU, matrix4Scratch);
 
     var southMercatorY;
     var oneOverMercatorHeight;
@@ -283,13 +292,16 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var heights = new Array(vertexCount);
     var uvs = new Array(vertexCount);
     var webMercatorTs = includeWebMercatorT ? new Array(vertexCount) : [];
+    var geodeticSurfaceNormals = includeGeodeticSurfaceNormals
+      ? new Array(vertexCount)
+      : [];
 
     var startRow = 0;
     var endRow = height;
     var startCol = 0;
     var endCol = width;
 
-    if (skirtHeight > 0.0) {
+    if (hasSkirts) {
       --startRow;
       ++endRow;
       --startCol;
@@ -317,7 +329,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       }
 
       var v = (latitude - geographicSouth) / (geographicNorth - geographicSouth);
-      v = _Math.CesiumMath.clamp(v, 0.0, 1.0);
+      v = ComponentDatatype.CesiumMath.clamp(v, 0.0, 1.0);
 
       var isNorthEdge = rowIndex === startRow;
       var isSouthEdge = rowIndex === endRow - 1;
@@ -382,7 +394,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
           }
         }
 
-        heightSample = (heightSample * heightScale + heightOffset) * exaggeration;
+        heightSample = heightSample * heightScale + heightOffset;
 
         maximumHeight = Math.max(maximumHeight, heightSample);
         minimumHeight = Math.min(minimumHeight, heightSample);
@@ -396,7 +408,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         }
 
         var u = (longitude - geographicWest) / (geographicEast - geographicWest);
-        u = _Math.CesiumMath.clamp(u, 0.0, 1.0);
+        u = ComponentDatatype.CesiumMath.clamp(u, 0.0, 1.0);
 
         var index = row * width + col;
 
@@ -443,24 +455,29 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         var rSurfaceY = kY * oneOverGamma;
         var rSurfaceZ = kZ * oneOverGamma;
 
-        var position = new Cartesian2.Cartesian3();
+        var position = new Matrix2.Cartesian3();
         position.x = rSurfaceX + nX * heightSample;
         position.y = rSurfaceY + nY * heightSample;
         position.z = rSurfaceZ + nZ * heightSample;
 
+        Matrix2.Matrix4.multiplyByPoint(toENU, position, cartesian3Scratch);
+        Matrix2.Cartesian3.minimumByComponent(cartesian3Scratch, minimum, minimum);
+        Matrix2.Cartesian3.maximumByComponent(cartesian3Scratch, maximum, maximum);
+        hMin = Math.min(hMin, heightSample);
+
         positions[index] = position;
+        uvs[index] = new Matrix2.Cartesian2(u, v);
         heights[index] = heightSample;
-        uvs[index] = new Cartesian2.Cartesian2(u, v);
 
         if (includeWebMercatorT) {
           webMercatorTs[index] = webMercatorT;
         }
 
-        Transforms.Matrix4.multiplyByPoint(toENU, position, cartesian3Scratch);
-
-        Cartesian2.Cartesian3.minimumByComponent(cartesian3Scratch, minimum, minimum);
-        Cartesian2.Cartesian3.maximumByComponent(cartesian3Scratch, maximum, maximum);
-        hMin = Math.min(hMin, heightSample);
+        if (includeGeodeticSurfaceNormals) {
+          geodeticSurfaceNormals[index] = ellipsoid.geodeticSurfaceNormal(
+            position
+          );
+        }
       }
     }
 
@@ -485,16 +502,20 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       );
     }
 
-    var aaBox = new EllipsoidTangentPlane.AxisAlignedBoundingBox(minimum, maximum, relativeToCenter);
+    var aaBox = new AxisAlignedBoundingBox.AxisAlignedBoundingBox(minimum, maximum, relativeToCenter);
     var encoding = new TerrainEncoding.TerrainEncoding(
+      relativeToCenter,
       aaBox,
       hMin,
       maximumHeight,
       fromENU,
       false,
-      includeWebMercatorT
+      includeWebMercatorT,
+      includeGeodeticSurfaceNormals,
+      exaggeration,
+      exaggerationRelativeHeight
     );
-    var vertices = new Float32Array(vertexCount * encoding.getStride());
+    var vertices = new Float32Array(vertexCount * encoding.stride);
 
     var bufferIndex = 0;
     for (var j = 0; j < vertexCount; ++j) {
@@ -505,7 +526,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         uvs[j],
         heights[j],
         undefined,
-        webMercatorTs[j]
+        webMercatorTs[j],
+        geodeticSurfaceNormals[j]
       );
     }
 
@@ -520,6 +542,9 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     };
   };
 
+  /* This file is automatically rebuilt by the Cesium build process. */
+
+  var LercDecode = when.createCommonjsModule(function (module) {
   /* jshint forin: false, bitwise: false */
   /*
   Copyright 2015-2018 Esri
@@ -547,8 +572,6 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   */
 
   /* Copyright 2015-2018 Esri. Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 @preserve */
-
-  var tmp = {};
 
   /**
    * a module for decoding LERC blobs
@@ -1785,8 +1808,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
             var fileVersion = headerInfo.fileVersion;
             //var block = {};
             var blockPtr = 0;
-            var viewByteLength = ((input.byteLength - data.ptr) >= 5) ? 5 : (input.byteLength - data.ptr);
-            var view = new DataView(input, data.ptr, viewByteLength);
+            var view = new DataView(input, data.ptr, 5);//to do
             var headerByte = view.getUint8(0);
             blockPtr++;
             var bits67 = headerByte >> 6;
@@ -1864,7 +1886,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
                 stuffedData = new Uint32Array(arrayBuf);
                 data.ptr += dataBytes;
                 if (fileVersion >= 3) {
-                  if (offset === null) {
+                  if (offset == null) {
                     BitStuffer.originalUnstuff2(stuffedData, blockDataBuffer, bitsPerPixel, numElements);
                   }
                   else {
@@ -1872,7 +1894,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
                   }
                 }
                 else {
-                  if (offset === null) {
+                  if (offset == null) {
                     BitStuffer.originalUnstuff(stuffedData, blockDataBuffer, bitsPerPixel, numElements);
                   }
                   else {
@@ -2175,7 +2197,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         },
 
         isValidPixelValue: function(t, val) {
-          if (val === null) {
+          if (val == null) {
             return false;
           }
           var isValid;
@@ -2364,9 +2386,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
           data.pixels = {};
 
           // File header
-          if (!Lerc2Helpers.readHeaderInfo(input, data)) {
-            return;
-          }
+          if (!Lerc2Helpers.readHeaderInfo(input, data)) ;
           var headerInfo = data.headerInfo;
           var fileVersion = headerInfo.fileVersion;
           var OutPixelTypeArray = Lerc2Helpers.getDataTypeArray(headerInfo.imageType);
@@ -2617,17 +2637,25 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       }
     };
 
-    tmp.Lerc = Lerc;
-  })();
+    if (module.exports) {/* jshint ignore:line */
+      //commonJS module 1.0/1.1/1.1.1 systems, such as nodeJS
+      //http://wiki.commonjs.org/wiki/Modules
+      module.exports = Lerc;/* jshint ignore:line */
+    }
+    else {
+      //assign to this, most likely window
+      this.Lerc = Lerc;
+    }
 
-  var Lerc = tmp.Lerc;
+  })();
+  });
 
   function createVerticesFromHeightmap(parameters, transferableObjects) {
     // LERC encoded buffers must be decoded, then we can process them like normal
     if (parameters.encoding === HeightmapEncoding$1.LERC) {
       var result;
       try {
-        result = Lerc.decode(parameters.heightmap);
+        result = LercDecode.decode(parameters.heightmap);
       } catch (error) {
         throw new RuntimeError.RuntimeError(error);
       }
@@ -2642,8 +2670,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       parameters.height = result.height;
     }
 
-    parameters.ellipsoid = Cartesian2.Ellipsoid.clone(parameters.ellipsoid);
-    parameters.rectangle = Cartesian2.Rectangle.clone(parameters.rectangle);
+    parameters.ellipsoid = Matrix2.Ellipsoid.clone(parameters.ellipsoid);
+    parameters.rectangle = Matrix2.Rectangle.clone(parameters.rectangle);
 
     var statistics = HeightmapTessellator.computeVertices(parameters);
     var vertices = statistics.vertices;
@@ -2651,7 +2679,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     return {
       vertices: vertices.buffer,
-      numberOfAttributes: statistics.encoding.getStride(),
+      numberOfAttributes: statistics.encoding.stride,
       minimumHeight: statistics.minimumHeight,
       maximumHeight: statistics.maximumHeight,
       gridWidth: parameters.width,
@@ -2670,4 +2698,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createVerticesFromHeightmap$1;
 
-});
+}));

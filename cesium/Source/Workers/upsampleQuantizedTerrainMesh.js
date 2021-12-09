@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './AttributeCompression-c6a20ed1', './IndexDatatype-1be7d1f8', './IntersectionTests-a2506214', './Plane-cd2fd16b', './createTaskProcessorWorker', './EllipsoidTangentPlane-941bac8f', './OrientedBoundingBox-41937a64', './TerrainEncoding-fe139b8d'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, AttributeCompression, IndexDatatype, IntersectionTests, Plane, createTaskProcessorWorker, EllipsoidTangentPlane, OrientedBoundingBox, TerrainEncoding) { 'use strict';
+define(['./AttributeCompression-a3d02c34', './Transforms-de823166', './Matrix2-0e286ffc', './when-8166c7dd', './TerrainEncoding-6e967e8e', './IndexDatatype-797210ca', './RuntimeError-4fdc4459', './ComponentDatatype-9ed50558', './OrientedBoundingBox-7045a823', './createTaskProcessorWorker', './combine-a5c4cc47', './WebGLConstants-0664004c', './EllipsoidTangentPlane-892d7b0a', './AxisAlignedBoundingBox-96fb2a8b', './IntersectionTests-30f5d388', './Plane-456cf3fd'], (function (AttributeCompression, Transforms, Matrix2, when, TerrainEncoding, IndexDatatype, RuntimeError, ComponentDatatype, OrientedBoundingBox, createTaskProcessorWorker, combine, WebGLConstants, EllipsoidTangentPlane, AxisAlignedBoundingBox, IntersectionTests, Plane) { 'use strict';
 
   /**
    * Contains functions for operating on 2D triangles.
@@ -44,19 +44,19 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   ) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(threshold)) {
-      throw new Check.DeveloperError("threshold is required.");
+      throw new RuntimeError.DeveloperError("threshold is required.");
     }
     if (!when.defined(keepAbove)) {
-      throw new Check.DeveloperError("keepAbove is required.");
+      throw new RuntimeError.DeveloperError("keepAbove is required.");
     }
     if (!when.defined(u0)) {
-      throw new Check.DeveloperError("u0 is required.");
+      throw new RuntimeError.DeveloperError("u0 is required.");
     }
     if (!when.defined(u1)) {
-      throw new Check.DeveloperError("u1 is required.");
+      throw new RuntimeError.DeveloperError("u1 is required.");
     }
     if (!when.defined(u2)) {
-      throw new Check.DeveloperError("u2 is required.");
+      throw new RuntimeError.DeveloperError("u2 is required.");
     }
     //>>includeEnd('debug');
 
@@ -243,28 +243,28 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   ) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(x)) {
-      throw new Check.DeveloperError("x is required.");
+      throw new RuntimeError.DeveloperError("x is required.");
     }
     if (!when.defined(y)) {
-      throw new Check.DeveloperError("y is required.");
+      throw new RuntimeError.DeveloperError("y is required.");
     }
     if (!when.defined(x1)) {
-      throw new Check.DeveloperError("x1 is required.");
+      throw new RuntimeError.DeveloperError("x1 is required.");
     }
     if (!when.defined(y1)) {
-      throw new Check.DeveloperError("y1 is required.");
+      throw new RuntimeError.DeveloperError("y1 is required.");
     }
     if (!when.defined(x2)) {
-      throw new Check.DeveloperError("x2 is required.");
+      throw new RuntimeError.DeveloperError("x2 is required.");
     }
     if (!when.defined(y2)) {
-      throw new Check.DeveloperError("y2 is required.");
+      throw new RuntimeError.DeveloperError("y2 is required.");
     }
     if (!when.defined(x3)) {
-      throw new Check.DeveloperError("x3 is required.");
+      throw new RuntimeError.DeveloperError("x3 is required.");
     }
     if (!when.defined(y3)) {
-      throw new Check.DeveloperError("y3 is required.");
+      throw new RuntimeError.DeveloperError("y3 is required.");
     }
     //>>includeEnd('debug');
 
@@ -285,7 +285,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       result.z = l3;
       return result;
     }
-    return new Cartesian2.Cartesian3(l1, l2, l3);
+    return new Matrix2.Cartesian3(l1, l2, l3);
   };
 
   /**
@@ -319,14 +319,14 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     result
   ) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.number("x00", x00);
-    Check.Check.typeOf.number("y00", y00);
-    Check.Check.typeOf.number("x01", x01);
-    Check.Check.typeOf.number("y01", y01);
-    Check.Check.typeOf.number("x10", x10);
-    Check.Check.typeOf.number("y10", y10);
-    Check.Check.typeOf.number("x11", x11);
-    Check.Check.typeOf.number("y11", y11);
+    RuntimeError.Check.typeOf.number("x00", x00);
+    RuntimeError.Check.typeOf.number("y00", y00);
+    RuntimeError.Check.typeOf.number("x01", x01);
+    RuntimeError.Check.typeOf.number("y01", y01);
+    RuntimeError.Check.typeOf.number("x10", x10);
+    RuntimeError.Check.typeOf.number("y10", y10);
+    RuntimeError.Check.typeOf.number("x11", x11);
+    RuntimeError.Check.typeOf.number("y11", y11);
     //>>includeEnd('debug');
 
     var numerator1A = (x11 - x10) * (y00 - y10) - (y11 - y10) * (x00 - x10);
@@ -343,7 +343,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     if (ua1 >= 0 && ua1 <= 1 && ub1 >= 0 && ub1 <= 1) {
       if (!when.defined(result)) {
-        result = new Cartesian2.Cartesian2();
+        result = new Matrix2.Cartesian2();
       }
 
       result.x = x00 + ua1 * (x01 - x00);
@@ -359,18 +359,18 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   var clipScratch = [];
   var clipScratch2 = [];
   var verticesScratch = [];
-  var cartographicScratch = new Cartesian2.Cartographic();
-  var cartesian3Scratch = new Cartesian2.Cartesian3();
+  var cartographicScratch = new Matrix2.Cartographic();
+  var cartesian3Scratch = new Matrix2.Cartesian3();
   var uScratch = [];
   var vScratch = [];
   var heightScratch = [];
   var indicesScratch = [];
   var normalsScratch = [];
-  var horizonOcclusionPointScratch = new Cartesian2.Cartesian3();
+  var horizonOcclusionPointScratch = new Matrix2.Cartesian3();
   var boundingSphereScratch = new Transforms.BoundingSphere();
   var orientedBoundingBoxScratch = new OrientedBoundingBox.OrientedBoundingBox();
-  var decodeTexCoordsScratch = new Cartesian2.Cartesian2();
-  var octEncodedNormalScratch = new Cartesian2.Cartesian3();
+  var decodeTexCoordsScratch = new Matrix2.Cartesian2();
+  var octEncodedNormalScratch = new Matrix2.Cartesian3();
 
   function upsampleQuantizedTerrainMesh(parameters, transferableObjects) {
     var isEastChild = parameters.isEastChild;
@@ -402,7 +402,6 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var encoding = TerrainEncoding.TerrainEncoding.clone(parameters.encoding);
     var hasVertexNormals = encoding.hasVertexNormals;
-    var exaggeration = parameters.exaggeration;
 
     var vertexCount = 0;
     var quantizedVertexCount = parameters.vertexCountWithoutSkirts;
@@ -428,11 +427,11 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         i,
         decodeTexCoordsScratch
       );
-      height = encoding.decodeHeight(parentVertices, i) / exaggeration;
+      height = encoding.decodeHeight(parentVertices, i);
 
-      u = _Math.CesiumMath.clamp((texCoords.x * maxShort) | 0, 0, maxShort);
-      v = _Math.CesiumMath.clamp((texCoords.y * maxShort) | 0, 0, maxShort);
-      parentHeightBuffer[i] = _Math.CesiumMath.clamp(
+      u = ComponentDatatype.CesiumMath.clamp((texCoords.x * maxShort) | 0, 0, maxShort);
+      v = ComponentDatatype.CesiumMath.clamp((texCoords.y * maxShort) | 0, 0, maxShort);
+      parentHeightBuffer[i] = ComponentDatatype.CesiumMath.clamp(
         (((height - parentMinimumHeight) /
           (parentMaximumHeight - parentMinimumHeight)) *
           maxShort) |
@@ -640,8 +639,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var cartesianVertices = verticesScratch;
     cartesianVertices.length = 0;
 
-    var ellipsoid = Cartesian2.Ellipsoid.clone(parameters.ellipsoid);
-    var rectangle = Cartesian2.Rectangle.clone(parameters.childRectangle);
+    var ellipsoid = Matrix2.Ellipsoid.clone(parameters.ellipsoid);
+    var rectangle = Matrix2.Rectangle.clone(parameters.childRectangle);
 
     var north = rectangle.north;
     var south = rectangle.south;
@@ -649,7 +648,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var west = rectangle.west;
 
     if (east < west) {
-      east += _Math.CesiumMath.TWO_PI;
+      east += ComponentDatatype.CesiumMath.TWO_PI;
     }
 
     for (i = 0; i < uBuffer.length; ++i) {
@@ -679,7 +678,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
       vBuffer[i] = v;
 
-      height = _Math.CesiumMath.lerp(
+      height = ComponentDatatype.CesiumMath.lerp(
         parentMinimumHeight,
         parentMaximumHeight,
         heightBuffer[i] / maxShort
@@ -693,8 +692,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
       heightBuffer[i] = height;
 
-      cartographicScratch.longitude = _Math.CesiumMath.lerp(west, east, u / maxShort);
-      cartographicScratch.latitude = _Math.CesiumMath.lerp(south, north, v / maxShort);
+      cartographicScratch.longitude = ComponentDatatype.CesiumMath.lerp(west, east, u / maxShort);
+      cartographicScratch.latitude = ComponentDatatype.CesiumMath.lerp(south, north, v / maxShort);
       cartographicScratch.height = height;
 
       ellipsoid.cartographicToCartesian(cartographicScratch, cartesian3Scratch);
@@ -706,7 +705,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var boundingSphere = Transforms.BoundingSphere.fromVertices(
       cartesianVertices,
-      Cartesian2.Cartesian3.ZERO,
+      Matrix2.Cartesian3.ZERO,
       3,
       boundingSphereScratch
     );
@@ -869,29 +868,29 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     if (when.defined(this.index)) {
       return this.heightBuffer[this.index];
     }
-    return _Math.CesiumMath.lerp(this.first.getH(), this.second.getH(), this.ratio);
+    return ComponentDatatype.CesiumMath.lerp(this.first.getH(), this.second.getH(), this.ratio);
   };
 
   Vertex.prototype.getU = function () {
     if (when.defined(this.index)) {
       return this.uBuffer[this.index];
     }
-    return _Math.CesiumMath.lerp(this.first.getU(), this.second.getU(), this.ratio);
+    return ComponentDatatype.CesiumMath.lerp(this.first.getU(), this.second.getU(), this.ratio);
   };
 
   Vertex.prototype.getV = function () {
     if (when.defined(this.index)) {
       return this.vBuffer[this.index];
     }
-    return _Math.CesiumMath.lerp(this.first.getV(), this.second.getV(), this.ratio);
+    return ComponentDatatype.CesiumMath.lerp(this.first.getV(), this.second.getV(), this.ratio);
   };
 
-  var encodedScratch = new Cartesian2.Cartesian2();
+  var encodedScratch = new Matrix2.Cartesian2();
   // An upsampled triangle may be clipped twice before it is assigned an index
   // In this case, we need a buffer to handle the recursion of getNormalX() and getNormalY().
   var depth = -1;
-  var cartesianScratch1 = [new Cartesian2.Cartesian3(), new Cartesian2.Cartesian3()];
-  var cartesianScratch2 = [new Cartesian2.Cartesian3(), new Cartesian2.Cartesian3()];
+  var cartesianScratch1 = [new Matrix2.Cartesian3(), new Matrix2.Cartesian3()];
+  var cartesianScratch2 = [new Matrix2.Cartesian3(), new Matrix2.Cartesian3()];
   function lerpOctEncodedNormal(vertex, result) {
     ++depth;
 
@@ -908,13 +907,13 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       vertex.second.getNormalY(),
       second
     );
-    cartesian3Scratch = Cartesian2.Cartesian3.lerp(
+    cartesian3Scratch = Matrix2.Cartesian3.lerp(
       first,
       second,
       vertex.ratio,
       cartesian3Scratch
     );
-    Cartesian2.Cartesian3.normalize(cartesian3Scratch, cartesian3Scratch);
+    Matrix2.Cartesian3.normalize(cartesian3Scratch, cartesian3Scratch);
 
     AttributeCompression.AttributeCompression.octEncode(cartesian3Scratch, result);
 
@@ -1021,4 +1020,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return upsampleQuantizedTerrainMesh$1;
 
-});
+}));

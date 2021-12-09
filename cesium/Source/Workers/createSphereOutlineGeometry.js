@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './IndexDatatype-1be7d1f8', './GeometryOffsetAttribute-9c46b133', './EllipsoidOutlineGeometry-278a918b'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, EllipsoidOutlineGeometry) { 'use strict';
+define(['./when-8166c7dd', './Matrix2-0e286ffc', './RuntimeError-4fdc4459', './EllipsoidOutlineGeometry-cd48a50b', './ComponentDatatype-9ed50558', './WebGLConstants-0664004c', './GeometryOffsetAttribute-e8e698d7', './Transforms-de823166', './combine-a5c4cc47', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './IndexDatatype-797210ca'], (function (when, Matrix2, RuntimeError, EllipsoidOutlineGeometry, ComponentDatatype, WebGLConstants, GeometryOffsetAttribute, Transforms, combine, GeometryAttribute, GeometryAttributes, IndexDatatype) { 'use strict';
 
   /**
    * A description of the outline of a sphere.
@@ -27,7 +27,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   function SphereOutlineGeometry(options) {
     var radius = when.defaultValue(options.radius, 1.0);
-    var radii = new Cartesian2.Cartesian3(radius, radius, radius);
+    var radii = new Matrix2.Cartesian3(radius, radius, radius);
     var ellipsoidOptions = {
       radii: radii,
       stackPartitions: options.stackPartitions,
@@ -56,7 +56,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   SphereOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
+    RuntimeError.Check.typeOf.object("value", value);
     //>>includeEnd('debug');
 
     return EllipsoidOutlineGeometry.EllipsoidOutlineGeometry.pack(
@@ -69,7 +69,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   var scratchEllipsoidGeometry = new EllipsoidOutlineGeometry.EllipsoidOutlineGeometry();
   var scratchOptions = {
     radius: undefined,
-    radii: new Cartesian2.Cartesian3(),
+    radii: new Matrix2.Cartesian3(),
     stackPartitions: undefined,
     slicePartitions: undefined,
     subdivisions: undefined,
@@ -98,7 +98,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       return new SphereOutlineGeometry(scratchOptions);
     }
 
-    Cartesian2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
+    Matrix2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
     result._ellipsoidGeometry = new EllipsoidOutlineGeometry.EllipsoidOutlineGeometry(scratchOptions);
     return result;
   };
@@ -107,7 +107,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    * Computes the geometric representation of an outline of a sphere, including its vertices, indices, and a bounding sphere.
    *
    * @param {SphereOutlineGeometry} sphereGeometry A description of the sphere outline.
-   * @returns {Geometry} The computed vertices and indices.
+   * @returns {Geometry|undefined} The computed vertices and indices.
    */
   SphereOutlineGeometry.createGeometry = function (sphereGeometry) {
     return EllipsoidOutlineGeometry.EllipsoidOutlineGeometry.createGeometry(
@@ -124,4 +124,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createSphereOutlineGeometry;
 
-});
+}));

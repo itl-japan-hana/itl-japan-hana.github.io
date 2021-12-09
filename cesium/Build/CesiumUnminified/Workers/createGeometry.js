@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './AttributeCompression-ce9e2d64', './GeometryPipeline-59563fec', './EncodedCartesian3-11790f9c', './IndexDatatype-25023891', './IntersectionTests-4c5c02c7', './Plane-58dba41a', './PrimitivePipeline-619c680a', './WebMercatorProjection-c2471d99', './createTaskProcessorWorker'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, AttributeCompression, GeometryPipeline, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, PrimitivePipeline, WebMercatorProjection, createTaskProcessorWorker) { 'use strict';
+define(['./when-4bbc8319', './PrimitivePipeline-44fdb064', './createTaskProcessorWorker', './Transforms-86b6fa28', './Matrix2-91d5b6af', './RuntimeError-346a3079', './ComponentDatatype-f194c48b', './WebGLConstants-1c8239cc', './combine-83860057', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './GeometryPipeline-e3097c85', './AttributeCompression-1f6679e1', './EncodedCartesian3-882fbcbd', './IndexDatatype-ee69f1fd', './IntersectionTests-26599c5e', './Plane-4f333bc4', './WebMercatorProjection-c196164d'], (function (when, PrimitivePipeline, createTaskProcessorWorker, Transforms, Matrix2, RuntimeError, ComponentDatatype, WebGLConstants, combine, GeometryAttribute, GeometryAttributes, GeometryPipeline, AttributeCompression, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, WebMercatorProjection) { 'use strict';
 
   /* global require */
 
@@ -75,5 +75,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createGeometry$1;
 
-});
+}));
 //# sourceMappingURL=createGeometry.js.map

@@ -1,7 +1,7 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './GeometryOffsetAttribute-9c46b133'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, GeometryOffsetAttribute) { 'use strict';
+define(['./GeometryOffsetAttribute-e8e698d7', './Transforms-de823166', './Matrix2-0e286ffc', './RuntimeError-4fdc4459', './ComponentDatatype-9ed50558', './when-8166c7dd', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './combine-a5c4cc47', './WebGLConstants-0664004c'], (function (GeometryOffsetAttribute, Transforms, Matrix2, RuntimeError, ComponentDatatype, when, GeometryAttribute, GeometryAttributes, combine, WebGLConstants) { 'use strict';
 
-  var diffScratch = new Cartesian2.Cartesian3();
+  var diffScratch = new Matrix2.Cartesian3();
 
   /**
    * A description of the outline of a cube centered at the origin.
@@ -31,20 +31,20 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var max = options.maximum;
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("min", min);
-    Check.Check.typeOf.object("max", max);
+    RuntimeError.Check.typeOf.object("min", min);
+    RuntimeError.Check.typeOf.object("max", max);
     if (
       when.defined(options.offsetAttribute) &&
       options.offsetAttribute === GeometryOffsetAttribute.GeometryOffsetAttribute.TOP
     ) {
-      throw new Check.DeveloperError(
+      throw new RuntimeError.DeveloperError(
         "GeometryOffsetAttribute.TOP is not a supported options.offsetAttribute for this geometry."
       );
     }
     //>>includeEnd('debug');
 
-    this._min = Cartesian2.Cartesian3.clone(min);
-    this._max = Cartesian2.Cartesian3.clone(max);
+    this._min = Matrix2.Cartesian3.clone(min);
+    this._max = Matrix2.Cartesian3.clone(max);
     this._offsetAttribute = options.offsetAttribute;
     this._workerName = "createBoxOutlineGeometry";
   }
@@ -72,16 +72,16 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var dimensions = options.dimensions;
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("dimensions", dimensions);
-    Check.Check.typeOf.number.greaterThanOrEquals("dimensions.x", dimensions.x, 0);
-    Check.Check.typeOf.number.greaterThanOrEquals("dimensions.y", dimensions.y, 0);
-    Check.Check.typeOf.number.greaterThanOrEquals("dimensions.z", dimensions.z, 0);
+    RuntimeError.Check.typeOf.object("dimensions", dimensions);
+    RuntimeError.Check.typeOf.number.greaterThanOrEquals("dimensions.x", dimensions.x, 0);
+    RuntimeError.Check.typeOf.number.greaterThanOrEquals("dimensions.y", dimensions.y, 0);
+    RuntimeError.Check.typeOf.number.greaterThanOrEquals("dimensions.z", dimensions.z, 0);
     //>>includeEnd('debug');
 
-    var corner = Cartesian2.Cartesian3.multiplyByScalar(dimensions, 0.5, new Cartesian2.Cartesian3());
+    var corner = Matrix2.Cartesian3.multiplyByScalar(dimensions, 0.5, new Matrix2.Cartesian3());
 
     return new BoxOutlineGeometry({
-      minimum: Cartesian2.Cartesian3.negate(corner, new Cartesian2.Cartesian3()),
+      minimum: Matrix2.Cartesian3.negate(corner, new Matrix2.Cartesian3()),
       maximum: corner,
       offsetAttribute: options.offsetAttribute,
     });
@@ -109,7 +109,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   BoxOutlineGeometry.fromAxisAlignedBoundingBox = function (boundingBox) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("boundindBox", boundingBox);
+    RuntimeError.Check.typeOf.object("boundindBox", boundingBox);
     //>>includeEnd('debug');
 
     return new BoxOutlineGeometry({
@@ -122,7 +122,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    * The number of elements used to pack the object into an array.
    * @type {Number}
    */
-  BoxOutlineGeometry.packedLength = 2 * Cartesian2.Cartesian3.packedLength + 1;
+  BoxOutlineGeometry.packedLength = 2 * Matrix2.Cartesian3.packedLength + 1;
 
   /**
    * Stores the provided instance into the provided array.
@@ -135,15 +135,15 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   BoxOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.typeOf.object("value", value);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
 
-    Cartesian2.Cartesian3.pack(value._min, array, startingIndex);
-    Cartesian2.Cartesian3.pack(value._max, array, startingIndex + Cartesian2.Cartesian3.packedLength);
-    array[startingIndex + Cartesian2.Cartesian3.packedLength * 2] = when.defaultValue(
+    Matrix2.Cartesian3.pack(value._min, array, startingIndex);
+    Matrix2.Cartesian3.pack(value._max, array, startingIndex + Matrix2.Cartesian3.packedLength);
+    array[startingIndex + Matrix2.Cartesian3.packedLength * 2] = when.defaultValue(
       value._offsetAttribute,
       -1
     );
@@ -151,8 +151,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     return array;
   };
 
-  var scratchMin = new Cartesian2.Cartesian3();
-  var scratchMax = new Cartesian2.Cartesian3();
+  var scratchMin = new Matrix2.Cartesian3();
+  var scratchMax = new Matrix2.Cartesian3();
   var scratchOptions = {
     minimum: scratchMin,
     maximum: scratchMax,
@@ -169,18 +169,18 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   BoxOutlineGeometry.unpack = function (array, startingIndex, result) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
 
-    var min = Cartesian2.Cartesian3.unpack(array, startingIndex, scratchMin);
-    var max = Cartesian2.Cartesian3.unpack(
+    var min = Matrix2.Cartesian3.unpack(array, startingIndex, scratchMin);
+    var max = Matrix2.Cartesian3.unpack(
       array,
-      startingIndex + Cartesian2.Cartesian3.packedLength,
+      startingIndex + Matrix2.Cartesian3.packedLength,
       scratchMax
     );
-    var offsetAttribute = array[startingIndex + Cartesian2.Cartesian3.packedLength * 2];
+    var offsetAttribute = array[startingIndex + Matrix2.Cartesian3.packedLength * 2];
 
     if (!when.defined(result)) {
       scratchOptions.offsetAttribute =
@@ -188,8 +188,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       return new BoxOutlineGeometry(scratchOptions);
     }
 
-    result._min = Cartesian2.Cartesian3.clone(min, result._min);
-    result._max = Cartesian2.Cartesian3.clone(max, result._max);
+    result._min = Matrix2.Cartesian3.clone(min, result._min);
+    result._max = Matrix2.Cartesian3.clone(max, result._max);
     result._offsetAttribute =
       offsetAttribute === -1 ? undefined : offsetAttribute;
 
@@ -206,7 +206,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var min = boxGeometry._min;
     var max = boxGeometry._max;
 
-    if (Cartesian2.Cartesian3.equals(min, max)) {
+    if (Matrix2.Cartesian3.equals(min, max)) {
       return;
     }
 
@@ -278,8 +278,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     indices[22] = 3;
     indices[23] = 7;
 
-    var diff = Cartesian2.Cartesian3.subtract(max, min, diffScratch);
-    var radius = Cartesian2.Cartesian3.magnitude(diff) * 0.5;
+    var diff = Matrix2.Cartesian3.subtract(max, min, diffScratch);
+    var radius = Matrix2.Cartesian3.magnitude(diff) * 0.5;
 
     if (when.defined(boxGeometry._offsetAttribute)) {
       var length = positions.length;
@@ -298,7 +298,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       attributes: attributes,
       indices: indices,
       primitiveType: GeometryAttribute.PrimitiveType.LINES,
-      boundingSphere: new Transforms.BoundingSphere(Cartesian2.Cartesian3.ZERO, radius),
+      boundingSphere: new Transforms.BoundingSphere(Matrix2.Cartesian3.ZERO, radius),
       offsetAttribute: boxGeometry._offsetAttribute,
     });
   };
@@ -312,4 +312,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createBoxOutlineGeometry;
 
-});
+}));

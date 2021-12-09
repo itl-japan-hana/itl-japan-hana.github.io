@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './IndexDatatype-1be7d1f8', './IntersectionTests-a2506214', './Plane-cd2fd16b', './VertexFormat-2df57ea4', './arrayRemoveDuplicates-1ded18d8', './ArcType-13a53523', './EllipsoidRhumbLine-19c0d22c', './EllipsoidGeodesic-833598ee', './PolylinePipeline-9e86d0c9', './Color-e58a2c08'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, IntersectionTests, Plane, VertexFormat, arrayRemoveDuplicates, ArcType, EllipsoidRhumbLine, EllipsoidGeodesic, PolylinePipeline, Color) { 'use strict';
+define(['./when-8166c7dd', './Matrix2-0e286ffc', './ArcType-13a53523', './arrayRemoveDuplicates-198208a4', './Transforms-de823166', './Color-019372ad', './ComponentDatatype-9ed50558', './RuntimeError-4fdc4459', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './IndexDatatype-797210ca', './PolylinePipeline-33ad4d60', './VertexFormat-c0801687', './combine-a5c4cc47', './WebGLConstants-0664004c', './EllipsoidGeodesic-00c343e4', './EllipsoidRhumbLine-403e6a39', './IntersectionTests-30f5d388', './Plane-456cf3fd'], (function (when, Matrix2, ArcType, arrayRemoveDuplicates, Transforms, Color, ComponentDatatype, RuntimeError, GeometryAttribute, GeometryAttributes, IndexDatatype, PolylinePipeline, VertexFormat, combine, WebGLConstants, EllipsoidGeodesic, EllipsoidRhumbLine, IntersectionTests, Plane) { 'use strict';
 
   var scratchInterpolateColorsArray = [];
 
@@ -89,17 +89,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(positions) || positions.length < 2) {
-      throw new Check.DeveloperError("At least two positions are required.");
+      throw new RuntimeError.DeveloperError("At least two positions are required.");
     }
     if (typeof width !== "number") {
-      throw new Check.DeveloperError("width must be a number");
+      throw new RuntimeError.DeveloperError("width must be a number");
     }
     if (
       when.defined(colors) &&
       ((colorsPerVertex && colors.length < positions.length) ||
         (!colorsPerVertex && colors.length < positions.length - 1))
     ) {
-      throw new Check.DeveloperError("colors has an invalid length.");
+      throw new RuntimeError.DeveloperError("colors has an invalid length.");
     }
     //>>includeEnd('debug');
 
@@ -114,14 +114,14 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     this._arcType = when.defaultValue(options.arcType, ArcType.ArcType.GEODESIC);
     this._granularity = when.defaultValue(
       options.granularity,
-      _Math.CesiumMath.RADIANS_PER_DEGREE
+      ComponentDatatype.CesiumMath.RADIANS_PER_DEGREE
     );
-    this._ellipsoid = Cartesian2.Ellipsoid.clone(
-      when.defaultValue(options.ellipsoid, Cartesian2.Ellipsoid.WGS84)
+    this._ellipsoid = Matrix2.Ellipsoid.clone(
+      when.defaultValue(options.ellipsoid, Matrix2.Ellipsoid.WGS84)
     );
     this._workerName = "createPolylineGeometry";
 
-    var numComponents = 1 + positions.length * Cartesian2.Cartesian3.packedLength;
+    var numComponents = 1 + positions.length * Matrix2.Cartesian3.packedLength;
     numComponents += when.defined(colors) ? 1 + colors.length * Color.Color.packedLength : 1;
 
     /**
@@ -129,7 +129,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
      * @type {Number}
      */
     this.packedLength =
-      numComponents + Cartesian2.Ellipsoid.packedLength + VertexFormat.VertexFormat.packedLength + 4;
+      numComponents + Matrix2.Ellipsoid.packedLength + VertexFormat.VertexFormat.packedLength + 4;
   }
 
   /**
@@ -144,10 +144,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   PolylineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(value)) {
-      throw new Check.DeveloperError("value is required");
+      throw new RuntimeError.DeveloperError("value is required");
     }
     if (!when.defined(array)) {
-      throw new Check.DeveloperError("array is required");
+      throw new RuntimeError.DeveloperError("array is required");
     }
     //>>includeEnd('debug');
 
@@ -159,8 +159,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var length = positions.length;
     array[startingIndex++] = length;
 
-    for (i = 0; i < length; ++i, startingIndex += Cartesian2.Cartesian3.packedLength) {
-      Cartesian2.Cartesian3.pack(positions[i], array, startingIndex);
+    for (i = 0; i < length; ++i, startingIndex += Matrix2.Cartesian3.packedLength) {
+      Matrix2.Cartesian3.pack(positions[i], array, startingIndex);
     }
 
     var colors = value._colors;
@@ -171,8 +171,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       Color.Color.pack(colors[i], array, startingIndex);
     }
 
-    Cartesian2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    Matrix2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     VertexFormat.VertexFormat.pack(value._vertexFormat, array, startingIndex);
     startingIndex += VertexFormat.VertexFormat.packedLength;
@@ -185,7 +185,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     return array;
   };
 
-  var scratchEllipsoid = Cartesian2.Ellipsoid.clone(Cartesian2.Ellipsoid.UNIT_SPHERE);
+  var scratchEllipsoid = Matrix2.Ellipsoid.clone(Matrix2.Ellipsoid.UNIT_SPHERE);
   var scratchVertexFormat = new VertexFormat.VertexFormat();
   var scratchOptions = {
     positions: undefined,
@@ -209,7 +209,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   PolylineGeometry.unpack = function (array, startingIndex, result) {
     //>>includeStart('debug', pragmas.debug);
     if (!when.defined(array)) {
-      throw new Check.DeveloperError("array is required");
+      throw new RuntimeError.DeveloperError("array is required");
     }
     //>>includeEnd('debug');
 
@@ -220,8 +220,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var length = array[startingIndex++];
     var positions = new Array(length);
 
-    for (i = 0; i < length; ++i, startingIndex += Cartesian2.Cartesian3.packedLength) {
-      positions[i] = Cartesian2.Cartesian3.unpack(array, startingIndex);
+    for (i = 0; i < length; ++i, startingIndex += Matrix2.Cartesian3.packedLength) {
+      positions[i] = Matrix2.Cartesian3.unpack(array, startingIndex);
     }
 
     length = array[startingIndex++];
@@ -231,8 +231,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       colors[i] = Color.Color.unpack(array, startingIndex);
     }
 
-    var ellipsoid = Cartesian2.Ellipsoid.unpack(array, startingIndex, scratchEllipsoid);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    var ellipsoid = Matrix2.Ellipsoid.unpack(array, startingIndex, scratchEllipsoid);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     var vertexFormat = VertexFormat.VertexFormat.unpack(
       array,
@@ -258,7 +258,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     result._positions = positions;
     result._colors = colors;
-    result._ellipsoid = Cartesian2.Ellipsoid.clone(ellipsoid, result._ellipsoid);
+    result._ellipsoid = Matrix2.Ellipsoid.clone(ellipsoid, result._ellipsoid);
     result._vertexFormat = VertexFormat.VertexFormat.clone(vertexFormat, result._vertexFormat);
     result._width = width;
     result._colorsPerVertex = colorsPerVertex;
@@ -268,10 +268,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     return result;
   };
 
-  var scratchCartesian3 = new Cartesian2.Cartesian3();
-  var scratchPosition = new Cartesian2.Cartesian3();
-  var scratchPrevPosition = new Cartesian2.Cartesian3();
-  var scratchNextPosition = new Cartesian2.Cartesian3();
+  var scratchCartesian3 = new Matrix2.Cartesian3();
+  var scratchPosition = new Matrix2.Cartesian3();
+  var scratchPrevPosition = new Matrix2.Cartesian3();
+  var scratchNextPosition = new Matrix2.Cartesian3();
 
   /**
    * Computes the geometric representation of a polyline, including its vertices, indices, and a bounding sphere.
@@ -292,10 +292,35 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var j;
     var k;
 
+    var removedIndices = [];
     var positions = arrayRemoveDuplicates.arrayRemoveDuplicates(
       polylineGeometry._positions,
-      Cartesian2.Cartesian3.equalsEpsilon
+      Matrix2.Cartesian3.equalsEpsilon,
+      false,
+      removedIndices
     );
+
+    if (when.defined(colors) && removedIndices.length > 0) {
+      var removedArrayIndex = 0;
+      var nextRemovedIndex = removedIndices[0];
+      colors = colors.filter(function (color, index) {
+        var remove = false;
+        if (colorsPerVertex) {
+          remove =
+            index === nextRemovedIndex || (index === 0 && nextRemovedIndex === 1);
+        } else {
+          remove = index + 1 === nextRemovedIndex;
+        }
+
+        if (remove) {
+          removedArrayIndex++;
+          nextRemovedIndex = removedIndices[removedArrayIndex];
+          return false;
+        }
+        return true;
+      });
+    }
+
     var positionsLength = positions.length;
 
     // A width of a pixel or less is not a valid geometry, but in order to support external data
@@ -308,7 +333,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       var subdivisionSize;
       var numberOfPointsFunction;
       if (arcType === ArcType.ArcType.GEODESIC) {
-        subdivisionSize = _Math.CesiumMath.chordLength(
+        subdivisionSize = ComponentDatatype.CesiumMath.chordLength(
           granularity,
           ellipsoid.maximumRadius
         );
@@ -395,28 +420,28 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     for (j = 0; j < positionsLength; ++j) {
       if (j === 0) {
         position = scratchCartesian3;
-        Cartesian2.Cartesian3.subtract(positions[0], positions[1], position);
-        Cartesian2.Cartesian3.add(positions[0], position, position);
+        Matrix2.Cartesian3.subtract(positions[0], positions[1], position);
+        Matrix2.Cartesian3.add(positions[0], position, position);
       } else {
         position = positions[j - 1];
       }
 
-      Cartesian2.Cartesian3.clone(position, scratchPrevPosition);
-      Cartesian2.Cartesian3.clone(positions[j], scratchPosition);
+      Matrix2.Cartesian3.clone(position, scratchPrevPosition);
+      Matrix2.Cartesian3.clone(positions[j], scratchPosition);
 
       if (j === positionsLength - 1) {
         position = scratchCartesian3;
-        Cartesian2.Cartesian3.subtract(
+        Matrix2.Cartesian3.subtract(
           positions[positionsLength - 1],
           positions[positionsLength - 2],
           position
         );
-        Cartesian2.Cartesian3.add(positions[positionsLength - 1], position, position);
+        Matrix2.Cartesian3.add(positions[positionsLength - 1], position, position);
       } else {
         position = positions[j + 1];
       }
 
-      Cartesian2.Cartesian3.clone(position, scratchNextPosition);
+      Matrix2.Cartesian3.clone(position, scratchNextPosition);
 
       var color0, color1;
       if (when.defined(finalColors)) {
@@ -435,9 +460,9 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       var endK = j === positionsLength - 1 ? 2 : 4;
 
       for (k = startK; k < endK; ++k) {
-        Cartesian2.Cartesian3.pack(scratchPosition, finalPositions, positionIndex);
-        Cartesian2.Cartesian3.pack(scratchPrevPosition, prevPositions, positionIndex);
-        Cartesian2.Cartesian3.pack(scratchNextPosition, nextPositions, positionIndex);
+        Matrix2.Cartesian3.pack(scratchPosition, finalPositions, positionIndex);
+        Matrix2.Cartesian3.pack(scratchPrevPosition, prevPositions, positionIndex);
+        Matrix2.Cartesian3.pack(scratchNextPosition, nextPositions, positionIndex);
         positionIndex += 3;
 
         var direction = k - 2 < 0 ? -1.0 : 1.0;
@@ -532,10 +557,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     if (when.defined(offset)) {
       polylineGeometry = PolylineGeometry.unpack(polylineGeometry, offset);
     }
-    polylineGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(polylineGeometry._ellipsoid);
+    polylineGeometry._ellipsoid = Matrix2.Ellipsoid.clone(polylineGeometry._ellipsoid);
     return PolylineGeometry.createGeometry(polylineGeometry);
   }
 
   return createPolylineGeometry;
 
-});
+}));

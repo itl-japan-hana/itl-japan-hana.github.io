@@ -18,8 +18,9 @@ import Buffer from "../Renderer/Buffer.js";
 import BufferUsage from "../Renderer/BufferUsage.js";
 import DrawCommand from "../Renderer/DrawCommand.js";
 import Pass from "../Renderer/Pass.js";
+import RenderState from "../Renderer/RenderState.js";
 import ShaderSource from "../Renderer/ShaderSource.js";
-import ForEach from "../ThirdParty/GltfPipeline/ForEach.js";
+import ForEach from "./GltfPipeline/ForEach.js";
 import when from "../ThirdParty/when.js";
 import Model from "./Model.js";
 import ModelInstance from "./ModelInstance.js";
@@ -61,7 +62,8 @@ var LoadState = {
  * @param {Cartesian3} [options.lightColor] The light color when shading models. When <code>undefined</code> the scene's light color is used instead.
  * @param {Number} [options.luminanceAtZenith=0.2] The sun's luminance at the zenith in kilo candela per meter squared to use for this model's procedural environment map.
  * @param {Cartesian3[]} [options.sphericalHarmonicCoefficients] The third order spherical harmonic coefficients used for the diffuse color of image-based lighting.
- * @param {String} [options.specularEnvironmentMaps] A URL to a KTX file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
+ * @param {String} [options.specularEnvironmentMaps] A URL to a KTX2 file that contains a cube map of the specular lighting and the convoluted specular mipmaps.
+ * @param {Boolean} [options.backFaceCulling=true] Whether to cull back-facing geometry. When true, back face culling is determined by the glTF material's doubleSided property; when false, back face culling is disabled.
  * @param {Boolean} [options.debugShowBoundingVolume=false] For debugging only. Draws the bounding sphere for the collection.
  * @param {Boolean} [options.debugWireframe=false] For debugging only. Draws the instances in wireframe.
  *
@@ -114,6 +116,9 @@ function ModelInstanceCollection(options) {
   this._drawCommands = [];
   this._modelCommands = undefined;
 
+  this._renderStates = undefined;
+  this._disableCullingRenderStates = undefined;
+
   this._boundingSphere = createBoundingSphere(this);
   this._center = Cartesian3.clone(this._boundingSphere.center);
   this._rtcTransform = new Matrix4();
@@ -157,6 +162,8 @@ function ModelInstanceCollection(options) {
   this.luminanceAtZenith = options.luminanceAtZenith;
   this.sphericalHarmonicCoefficients = options.sphericalHarmonicCoefficients;
   this.specularEnvironmentMaps = options.specularEnvironmentMaps;
+  this.backFaceCulling = defaultValue(options.backFaceCulling, true);
+  this._backFaceCulling = this.backFaceCulling;
 }
 
 Object.defineProperties(ModelInstanceCollection.prototype, {
@@ -448,7 +455,8 @@ function getFragmentShaderCallback(collection) {
       );
       fs = batchTable.getFragmentShaderCallback(
         true,
-        diffuseAttributeOrUniformName
+        diffuseAttributeOrUniformName,
+        false
       )(fs);
     } else {
       fs = "varying vec4 v_pickColor;\n" + fs;
@@ -529,7 +537,8 @@ function getFragmentShaderNonInstancedCallback(collection) {
       );
       fs = batchTable.getFragmentShaderCallback(
         true,
-        diffuseAttributeOrUniformName
+        diffuseAttributeOrUniformName,
+        false
       )(fs);
     } else {
       fs = "uniform vec4 czm_pickColor;\n" + fs;
@@ -685,6 +694,7 @@ function createModel(collection, context) {
     luminanceAtZenith: collection.luminanceAtZenith,
     sphericalHarmonicCoefficients: collection.sphericalHarmonicCoefficients,
     specularEnvironmentMaps: collection.specularEnvironmentMaps,
+    showOutline: collection.showOutline,
   };
 
   if (!usesBatchTable) {
@@ -787,8 +797,8 @@ function createModel(collection, context) {
   }
 }
 
-function updateWireframe(collection) {
-  if (collection._debugWireframe !== collection.debugWireframe) {
+function updateWireframe(collection, force) {
+  if (collection._debugWireframe !== collection.debugWireframe || force) {
     collection._debugWireframe = collection.debugWireframe;
 
     // This assumes the original primitive was TRIANGLES and that the triangles
@@ -803,9 +813,45 @@ function updateWireframe(collection) {
     }
   }
 }
-function updateShowBoundingVolume(collection) {
+
+function getDisableCullingRenderState(renderState) {
+  var rs = clone(renderState, true);
+  rs.cull.enabled = false;
+  return RenderState.fromCache(rs);
+}
+
+function updateBackFaceCulling(collection, force) {
+  if (collection._backFaceCulling !== collection.backFaceCulling || force) {
+    collection._backFaceCulling = collection.backFaceCulling;
+
+    var commands = collection._drawCommands;
+    var length = commands.length;
+    var i;
+
+    if (!defined(collection._disableCullingRenderStates)) {
+      collection._disableCullingRenderStates = new Array(length);
+      collection._renderStates = new Array(length);
+      for (i = 0; i < length; ++i) {
+        var renderState = commands[i].renderState;
+        var derivedRenderState = getDisableCullingRenderState(renderState);
+        collection._disableCullingRenderStates[i] = derivedRenderState;
+        collection._renderStates[i] = renderState;
+      }
+    }
+
+    for (i = 0; i < length; ++i) {
+      commands[i].renderState = collection._backFaceCulling
+        ? collection._renderStates[i]
+        : collection._disableCullingRenderStates[i];
+    }
+  }
+}
+
+function updateShowBoundingVolume(collection, force) {
   if (
-    collection.debugShowBoundingVolume !== collection._debugShowBoundingVolume
+    collection.debugShowBoundingVolume !==
+      collection._debugShowBoundingVolume ||
+    force
   ) {
     collection._debugShowBoundingVolume = collection.debugShowBoundingVolume;
 
@@ -939,13 +985,16 @@ function commandsDirty(model) {
   var nodeCommands = model._nodeCommands;
   var length = nodeCommands.length;
 
+  var commandsDirty = false;
+
   for (var i = 0; i < length; i++) {
     var nc = nodeCommands[i];
     if (nc.command.dirty) {
-      return true;
+      nc.command.dirty = false;
+      commandsDirty = true;
     }
   }
-  return false;
+  return commandsDirty;
 }
 
 function generateModelCommands(modelInstanceCollection, instancingSupported) {
@@ -960,8 +1009,8 @@ function generateModelCommands(modelInstanceCollection, instancingSupported) {
   }
 }
 
-function updateShadows(collection) {
-  if (collection.shadows !== collection._shadows) {
+function updateShadows(collection, force) {
+  if (collection.shadows !== collection._shadows || force) {
     collection._shadows = collection.shadows;
 
     var castShadows = ShadowMode.castShadows(collection.shadows);
@@ -1067,7 +1116,8 @@ ModelInstanceCollection.prototype.update = function (frameState) {
   }
 
   // If the model was set to rebuild shaders during update, rebuild instanced commands.
-  if (commandsDirty(model)) {
+  var modelCommandsDirty = commandsDirty(model);
+  if (modelCommandsDirty) {
     generateModelCommands(this, instancingSupported);
   }
 
@@ -1081,9 +1131,10 @@ ModelInstanceCollection.prototype.update = function (frameState) {
     updateCommandsNonInstanced(this);
   }
 
-  updateShadows(this);
-  updateWireframe(this);
-  updateShowBoundingVolume(this);
+  updateShadows(this, modelCommandsDirty);
+  updateWireframe(this, modelCommandsDirty);
+  updateBackFaceCulling(this, modelCommandsDirty);
+  updateShowBoundingVolume(this, modelCommandsDirty);
 
   var passes = frameState.passes;
   if (!passes.render && !passes.pick) {

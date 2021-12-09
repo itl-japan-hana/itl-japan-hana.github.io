@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './IndexDatatype-1be7d1f8', './createTaskProcessorWorker', './GeometryOffsetAttribute-9c46b133', './VertexFormat-2df57ea4', './BoxGeometry-99bb7079', './CylinderGeometryLibrary-09101d37', './CylinderGeometry-634a8e3a', './EllipsoidGeometry-110ad588', './Color-e58a2c08'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, createTaskProcessorWorker, GeometryOffsetAttribute, VertexFormat, BoxGeometry, CylinderGeometryLibrary, CylinderGeometry, EllipsoidGeometry, Color) { 'use strict';
+define(['./Transforms-de823166', './BoxGeometry-201be7ad', './Matrix2-0e286ffc', './Color-019372ad', './CylinderGeometry-74f780f9', './when-8166c7dd', './EllipsoidGeometry-0439b95e', './IndexDatatype-797210ca', './createTaskProcessorWorker', './RuntimeError-4fdc4459', './ComponentDatatype-9ed50558', './WebGLConstants-0664004c', './combine-a5c4cc47', './GeometryOffsetAttribute-e8e698d7', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './VertexFormat-c0801687', './CylinderGeometryLibrary-5924d4e5'], (function (Transforms, BoxGeometry, Matrix2, Color, CylinderGeometry, when, EllipsoidGeometry, IndexDatatype, createTaskProcessorWorker, RuntimeError, ComponentDatatype, WebGLConstants, combine, GeometryOffsetAttribute, GeometryAttribute, GeometryAttributes, VertexFormat, CylinderGeometryLibrary) { 'use strict';
 
   /**
    * Describes a renderable batch of geometry.
@@ -38,33 +38,33 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     this.batchIds = options.batchIds;
   }
 
-  var scratchCartesian = new Cartesian2.Cartesian3();
+  var scratchCartesian = new Matrix2.Cartesian3();
 
-  var packedBoxLength = Transforms.Matrix4.packedLength + Cartesian2.Cartesian3.packedLength;
-  var packedCylinderLength = Transforms.Matrix4.packedLength + 2;
-  var packedEllipsoidLength = Transforms.Matrix4.packedLength + Cartesian2.Cartesian3.packedLength;
-  var packedSphereLength = Cartesian2.Cartesian3.packedLength + 1;
+  var packedBoxLength = Matrix2.Matrix4.packedLength + Matrix2.Cartesian3.packedLength;
+  var packedCylinderLength = Matrix2.Matrix4.packedLength + 2;
+  var packedEllipsoidLength = Matrix2.Matrix4.packedLength + Matrix2.Cartesian3.packedLength;
+  var packedSphereLength = Matrix2.Cartesian3.packedLength + 1;
 
   var scratchModelMatrixAndBV = {
-    modelMatrix: new Transforms.Matrix4(),
+    modelMatrix: new Matrix2.Matrix4(),
     boundingVolume: new Transforms.BoundingSphere(),
   };
 
   function boxModelMatrixAndBoundingVolume(boxes, index) {
     var boxIndex = index * packedBoxLength;
 
-    var dimensions = Cartesian2.Cartesian3.unpack(boxes, boxIndex, scratchCartesian);
-    boxIndex += Cartesian2.Cartesian3.packedLength;
+    var dimensions = Matrix2.Cartesian3.unpack(boxes, boxIndex, scratchCartesian);
+    boxIndex += Matrix2.Cartesian3.packedLength;
 
-    var boxModelMatrix = Transforms.Matrix4.unpack(
+    var boxModelMatrix = Matrix2.Matrix4.unpack(
       boxes,
       boxIndex,
       scratchModelMatrixAndBV.modelMatrix
     );
-    Transforms.Matrix4.multiplyByScale(boxModelMatrix, dimensions, boxModelMatrix);
+    Matrix2.Matrix4.multiplyByScale(boxModelMatrix, dimensions, boxModelMatrix);
 
     var boundingVolume = scratchModelMatrixAndBV.boundingVolume;
-    Cartesian2.Cartesian3.clone(Cartesian2.Cartesian3.ZERO, boundingVolume.center);
+    Matrix2.Cartesian3.clone(Matrix2.Cartesian3.ZERO, boundingVolume.center);
     boundingVolume.radius = Math.sqrt(3.0);
 
     return scratchModelMatrixAndBV;
@@ -75,22 +75,22 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var cylinderRadius = cylinders[cylinderIndex++];
     var length = cylinders[cylinderIndex++];
-    var scale = Cartesian2.Cartesian3.fromElements(
+    var scale = Matrix2.Cartesian3.fromElements(
       cylinderRadius,
       cylinderRadius,
       length,
       scratchCartesian
     );
 
-    var cylinderModelMatrix = Transforms.Matrix4.unpack(
+    var cylinderModelMatrix = Matrix2.Matrix4.unpack(
       cylinders,
       cylinderIndex,
       scratchModelMatrixAndBV.modelMatrix
     );
-    Transforms.Matrix4.multiplyByScale(cylinderModelMatrix, scale, cylinderModelMatrix);
+    Matrix2.Matrix4.multiplyByScale(cylinderModelMatrix, scale, cylinderModelMatrix);
 
     var boundingVolume = scratchModelMatrixAndBV.boundingVolume;
-    Cartesian2.Cartesian3.clone(Cartesian2.Cartesian3.ZERO, boundingVolume.center);
+    Matrix2.Cartesian3.clone(Matrix2.Cartesian3.ZERO, boundingVolume.center);
     boundingVolume.radius = Math.sqrt(2.0);
 
     return scratchModelMatrixAndBV;
@@ -99,18 +99,18 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   function ellipsoidModelMatrixAndBoundingVolume(ellipsoids, index) {
     var ellipsoidIndex = index * packedEllipsoidLength;
 
-    var radii = Cartesian2.Cartesian3.unpack(ellipsoids, ellipsoidIndex, scratchCartesian);
-    ellipsoidIndex += Cartesian2.Cartesian3.packedLength;
+    var radii = Matrix2.Cartesian3.unpack(ellipsoids, ellipsoidIndex, scratchCartesian);
+    ellipsoidIndex += Matrix2.Cartesian3.packedLength;
 
-    var ellipsoidModelMatrix = Transforms.Matrix4.unpack(
+    var ellipsoidModelMatrix = Matrix2.Matrix4.unpack(
       ellipsoids,
       ellipsoidIndex,
       scratchModelMatrixAndBV.modelMatrix
     );
-    Transforms.Matrix4.multiplyByScale(ellipsoidModelMatrix, radii, ellipsoidModelMatrix);
+    Matrix2.Matrix4.multiplyByScale(ellipsoidModelMatrix, radii, ellipsoidModelMatrix);
 
     var boundingVolume = scratchModelMatrixAndBV.boundingVolume;
-    Cartesian2.Cartesian3.clone(Cartesian2.Cartesian3.ZERO, boundingVolume.center);
+    Matrix2.Cartesian3.clone(Matrix2.Cartesian3.ZERO, boundingVolume.center);
     boundingVolume.radius = 1.0;
 
     return scratchModelMatrixAndBV;
@@ -121,29 +121,29 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var sphereRadius = spheres[sphereIndex++];
 
-    var sphereTranslation = Cartesian2.Cartesian3.unpack(
+    var sphereTranslation = Matrix2.Cartesian3.unpack(
       spheres,
       sphereIndex,
       scratchCartesian
     );
-    var sphereModelMatrix = Transforms.Matrix4.fromTranslation(
+    var sphereModelMatrix = Matrix2.Matrix4.fromTranslation(
       sphereTranslation,
       scratchModelMatrixAndBV.modelMatrix
     );
-    Transforms.Matrix4.multiplyByUniformScale(
+    Matrix2.Matrix4.multiplyByUniformScale(
       sphereModelMatrix,
       sphereRadius,
       sphereModelMatrix
     );
 
     var boundingVolume = scratchModelMatrixAndBV.boundingVolume;
-    Cartesian2.Cartesian3.clone(Cartesian2.Cartesian3.ZERO, boundingVolume.center);
+    Matrix2.Cartesian3.clone(Matrix2.Cartesian3.ZERO, boundingVolume.center);
     boundingVolume.radius = 1.0;
 
     return scratchModelMatrixAndBV;
   }
 
-  var scratchPosition = new Cartesian2.Cartesian3();
+  var scratchPosition = new Matrix2.Cartesian3();
 
   function createPrimitive(
     options,
@@ -185,17 +185,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         i
       );
       var primitiveModelMatrix = primitiveModelMatrixAndBV.modelMatrix;
-      Transforms.Matrix4.multiply(modelMatrix, primitiveModelMatrix, primitiveModelMatrix);
+      Matrix2.Matrix4.multiply(modelMatrix, primitiveModelMatrix, primitiveModelMatrix);
 
       var batchId = primitiveBatchIds[i];
 
       var positionsLength = geometryPositions.length;
       for (var j = 0; j < positionsLength; j += 3) {
-        var position = Cartesian2.Cartesian3.unpack(geometryPositions, j, scratchPosition);
-        Transforms.Matrix4.multiplyByPoint(primitiveModelMatrix, position, position);
-        Cartesian2.Cartesian3.subtract(position, center, position);
+        var position = Matrix2.Cartesian3.unpack(geometryPositions, j, scratchPosition);
+        Matrix2.Matrix4.multiplyByPoint(primitiveModelMatrix, position, position);
+        Matrix2.Cartesian3.subtract(position, center, position);
 
-        Cartesian2.Cartesian3.pack(position, positions, positionOffset * 3 + j);
+        Matrix2.Cartesian3.pack(position, positions, positionOffset * 3 + j);
         vertexBatchIds[batchIdIndex++] = batchId;
       }
 
@@ -229,17 +229,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     options.batchedIndicesOffset += numberOfPrimitives;
   }
 
-  var scratchCenter = new Cartesian2.Cartesian3();
-  var scratchMatrix4 = new Transforms.Matrix4();
+  var scratchCenter = new Matrix2.Cartesian3();
+  var scratchMatrix4 = new Matrix2.Matrix4();
 
   function unpackBuffer(buffer) {
     var packedBuffer = new Float64Array(buffer);
 
     var offset = 0;
-    Cartesian2.Cartesian3.unpack(packedBuffer, offset, scratchCenter);
-    offset += Cartesian2.Cartesian3.packedLength;
+    Matrix2.Cartesian3.unpack(packedBuffer, offset, scratchCenter);
+    offset += Matrix2.Cartesian3.packedLength;
 
-    Transforms.Matrix4.unpack(packedBuffer, offset, scratchMatrix4);
+    Matrix2.Matrix4.unpack(packedBuffer, offset, scratchMatrix4);
   }
 
   function packedBatchedIndicesLength(batchedIndices) {
@@ -443,4 +443,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
   return createVectorTileGeometries$1;
 
-});
+}));

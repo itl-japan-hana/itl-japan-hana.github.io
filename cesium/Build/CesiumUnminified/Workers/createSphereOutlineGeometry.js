@@ -18,10 +18,10 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
 
-define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-6bcefdf0', './Transforms-45ac7ef3', './RuntimeError-2109023a', './WebGLConstants-76bb35d1', './ComponentDatatype-a26dd044', './GeometryAttribute-019ef36e', './GeometryAttributes-4fcfcf40', './IndexDatatype-25023891', './GeometryOffsetAttribute-d746452d', './EllipsoidOutlineGeometry-4c216e7b'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, IndexDatatype, GeometryOffsetAttribute, EllipsoidOutlineGeometry) { 'use strict';
+define(['./when-4bbc8319', './Matrix2-91d5b6af', './RuntimeError-346a3079', './EllipsoidOutlineGeometry-ee987302', './ComponentDatatype-f194c48b', './WebGLConstants-1c8239cc', './GeometryOffsetAttribute-6a692b56', './Transforms-86b6fa28', './combine-83860057', './GeometryAttribute-e0d0d297', './GeometryAttributes-7827a6c2', './IndexDatatype-ee69f1fd'], (function (when, Matrix2, RuntimeError, EllipsoidOutlineGeometry, ComponentDatatype, WebGLConstants, GeometryOffsetAttribute, Transforms, combine, GeometryAttribute, GeometryAttributes, IndexDatatype) { 'use strict';
 
   /**
    * A description of the outline of a sphere.
@@ -49,7 +49,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    */
   function SphereOutlineGeometry(options) {
     var radius = when.defaultValue(options.radius, 1.0);
-    var radii = new Cartesian2.Cartesian3(radius, radius, radius);
+    var radii = new Matrix2.Cartesian3(radius, radius, radius);
     var ellipsoidOptions = {
       radii: radii,
       stackPartitions: options.stackPartitions,
@@ -78,7 +78,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    */
   SphereOutlineGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
+    RuntimeError.Check.typeOf.object("value", value);
     //>>includeEnd('debug');
 
     return EllipsoidOutlineGeometry.EllipsoidOutlineGeometry.pack(
@@ -91,7 +91,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
   var scratchEllipsoidGeometry = new EllipsoidOutlineGeometry.EllipsoidOutlineGeometry();
   var scratchOptions = {
     radius: undefined,
-    radii: new Cartesian2.Cartesian3(),
+    radii: new Matrix2.Cartesian3(),
     stackPartitions: undefined,
     slicePartitions: undefined,
     subdivisions: undefined,
@@ -120,7 +120,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
       return new SphereOutlineGeometry(scratchOptions);
     }
 
-    Cartesian2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
+    Matrix2.Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
     result._ellipsoidGeometry = new EllipsoidOutlineGeometry.EllipsoidOutlineGeometry(scratchOptions);
     return result;
   };
@@ -129,7 +129,7 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
    * Computes the geometric representation of an outline of a sphere, including its vertices, indices, and a bounding sphere.
    *
    * @param {SphereOutlineGeometry} sphereGeometry A description of the sphere outline.
-   * @returns {Geometry} The computed vertices and indices.
+   * @returns {Geometry|undefined} The computed vertices and indices.
    */
   SphereOutlineGeometry.createGeometry = function (sphereGeometry) {
     return EllipsoidOutlineGeometry.EllipsoidOutlineGeometry.createGeometry(
@@ -146,5 +146,5 @@ define(['./when-54c2dc71', './Check-6c0211bc', './Math-1124a290', './Cartesian2-
 
   return createSphereOutlineGeometry;
 
-});
+}));
 //# sourceMappingURL=createSphereOutlineGeometry.js.map

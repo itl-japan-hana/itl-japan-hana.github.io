@@ -72,7 +72,11 @@ void main(void)\n\
 \n\
 #ifdef PICK\n\
 #ifdef CULL_FRAGMENTS\n\
-    if (0.0 <= uv.x && uv.x <= 1.0 && 0.0 <= uv.y && uv.y <= 1.0) {\n\
+    // When classifying translucent geometry, logDepthOrDepth == 0.0\n\
+    // indicates a region that should not be classified, possibly due to there\n\
+    // being opaque pixels there in another buffer.\n\
+    // Check for logDepthOrDepth != 0.0 to make sure this should be classified.\n\
+    if (0.0 <= uv.x && uv.x <= 1.0 && 0.0 <= uv.y && uv.y <= 1.0 || logDepthOrDepth != 0.0) {\n\
         gl_FragColor.a = 1.0; // 0.0 alpha leads to discard from ShaderSource.createPickFragmentShaderSource\n\
         czm_writeDepthClamp();\n\
     }\n\
@@ -82,7 +86,10 @@ void main(void)\n\
 #else // PICK\n\
 \n\
 #ifdef CULL_FRAGMENTS\n\
-    if (uv.x <= 0.0 || 1.0 <= uv.x || uv.y <= 0.0 || 1.0 <= uv.y) {\n\
+    // When classifying translucent geometry, logDepthOrDepth == 0.0\n\
+    // indicates a region that should not be classified, possibly due to there\n\
+    // being opaque pixels there in another buffer.\n\
+    if (uv.x <= 0.0 || 1.0 <= uv.x || uv.y <= 0.0 || 1.0 <= uv.y || logDepthOrDepth == 0.0) {\n\
         discard;\n\
     }\n\
 #endif\n\

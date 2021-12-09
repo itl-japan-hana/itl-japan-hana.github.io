@@ -10,7 +10,7 @@ export default "/**\n\
  * @property {float} shininess The sharpness of the specular reflection.  Higher values create a smaller, more focused specular highlight.\n\
  * @property {vec3} normal Surface's normal in eye coordinates. It is used for effects such as normal mapping. The default is the surface's unmodified normal.\n\
  * @property {vec3} emission Light emitted by the material equally in all directions. The default is vec3(0.0), which emits no light.\n\
- * @property {float} alpha Opacity of this material. 0.0 is completely transparent; 1.0 is completely opaque.\n\
+ * @property {float} alpha Alpha of this material. 0.0 is completely transparent; 1.0 is completely opaque.\n\
  */\n\
 struct czm_material\n\
 {\n\

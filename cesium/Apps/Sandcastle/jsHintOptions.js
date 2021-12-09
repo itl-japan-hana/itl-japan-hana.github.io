@@ -1,5 +1,5 @@
 // This file is automatically rebuilt by the Cesium build process.
-var sandcastleJsHintOptions = {
+const sandcastleJsHintOptions = {
     "bitwise": false,
     "camelcase": false,
     "curly": true,

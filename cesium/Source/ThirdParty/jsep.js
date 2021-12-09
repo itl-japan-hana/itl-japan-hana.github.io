@@ -1,12 +1,13 @@
-//     JavaScript Expression Parser (JSEP) 0.3.1
-//     JSEP may be freely distributed under the MIT License
-//     http://jsep.from.so/
+/* This file is automatically rebuilt by the Cesium build process. */
+import { c as createCommonjsModule } from './_commonjsHelpers-3aae1032.js';
 
-var tmp = {};
+var jsep = createCommonjsModule(function (module, exports) {
+//     JavaScript Expression Parser (JSEP) 0.3.5
+//     JSEP may be freely distributed under the MIT License
+//     https://ericsmekens.github.io/jsep/
 
 /*global module: true, exports: true, console: true */
 (function (root) {
-	'use strict';
 	// Node Types
 	// ----------
 
@@ -134,7 +135,7 @@ var tmp = {};
 				gobbleSpaces = function() {
 					var ch = exprICode(index);
 					// space or tab
-					while(ch === 32 || ch === 9) {
+					while(ch === 32 || ch === 9 || ch === 10 || ch === 13) {
 						ch = exprICode(++index);
 					}
 				},
@@ -178,9 +179,15 @@ var tmp = {};
 				// then, return that binary operation
 				gobbleBinaryOp = function() {
 					gobbleSpaces();
-					var biop, to_check = expr.substr(index, max_binop_len), tc_len = to_check.length;
+					var to_check = expr.substr(index, max_binop_len), tc_len = to_check.length;
 					while(tc_len > 0) {
-						if(binary_ops.hasOwnProperty(to_check)) {
+						// Don't accept a binary op when it is an identifier.
+						// Binary ops that start with a identifier-valid character must be followed
+						// by a non identifier-part valid character
+						if(binary_ops.hasOwnProperty(to_check) && (
+							!isIdentifierStart(exprICode(index)) ||
+							(index+to_check.length< expr.length && !isIdentifierPart(exprICode(index+to_check.length)))
+						)) {
 							index += tc_len;
 							return to_check;
 						}
@@ -192,7 +199,7 @@ var tmp = {};
 				// This function is responsible for gobbling an individual expression,
 				// e.g. `1`, `1+2`, `a+(b*2)-Math.sqrt(2)`
 				gobbleBinaryExpression = function() {
-					var ch_i, node, biop, prec, stack, biop_info, left, right, i;
+					var node, biop, prec, stack, biop_info, left, right, i, cur_biop;
 
 					// First, try to get the leftmost thing
 					// Then, check to see if there's a binary operator operating on that leftmost thing
@@ -223,6 +230,7 @@ var tmp = {};
 						}
 						biop_info = { value: biop, prec: prec };
 
+						cur_biop = biop;
 						// Reduce: make a binary expression from the three topmost entries.
 						while ((stack.length > 2) && (prec <= stack[stack.length - 2].prec)) {
 							right = stack.pop();
@@ -234,7 +242,7 @@ var tmp = {};
 
 						node = gobbleToken();
 						if(!node) {
-							throwError("Expected expression after " + biop, index);
+							throwError("Expected expression after " + cur_biop, index);
 						}
 						stack.push(biop_info, node);
 					}
@@ -262,16 +270,19 @@ var tmp = {};
 					} else if(ch === SQUOTE_CODE || ch === DQUOTE_CODE) {
 						// Single or double quotes
 						return gobbleStringLiteral();
-					} else if(isIdentifierStart(ch) || ch === OPAREN_CODE) { // open parenthesis
-						// `foo`, `bar.baz`
-						return gobbleVariable();
 					} else if (ch === OBRACK_CODE) {
 						return gobbleArray();
 					} else {
 						to_check = expr.substr(index, max_unop_len);
 						tc_len = to_check.length;
 						while(tc_len > 0) {
-							if(unary_ops.hasOwnProperty(to_check)) {
+						// Don't accept an unary op when it is an identifier.
+						// Unary ops that start with a identifier-valid character must be followed
+						// by a non identifier-part valid character
+							if(unary_ops.hasOwnProperty(to_check) && (
+								!isIdentifierStart(exprICode(index)) ||
+								(index+to_check.length < expr.length && !isIdentifierPart(exprICode(index+to_check.length)))
+							)) {
 								index += tc_len;
 								return {
 									type: UNARY_EXP,
@@ -283,8 +294,13 @@ var tmp = {};
 							to_check = to_check.substr(0, --tc_len);
 						}
 
-						return false;
+						if (isIdentifierStart(ch) || ch === OPAREN_CODE) { // open parenthesis
+							// `foo`, `bar.baz`
+							return gobbleVariable();
+						}
 					}
+
+					return false;
 				},
 				// Parse simple numeric literals: `12`, `3.4`, `.5`. Do this by using a string to
 				// keep track of everything in the numeric literal and then calling `parseFloat` on that string
@@ -354,7 +370,7 @@ var tmp = {};
 								case 'b': str += '\b'; break;
 								case 'f': str += '\f'; break;
 								case 'v': str += '\x0B'; break;
-								default : str += '\\' + ch;
+								default : str += ch;
 							}
 						} else {
 							str += ch;
@@ -418,15 +434,30 @@ var tmp = {};
 				// e.g. `foo(bar, baz)`, `my_func()`, or `[bar, baz]`
 				gobbleArguments = function(termination) {
 					var ch_i, args = [], node, closed = false;
+					var separator_count = 0;
 					while(index < length) {
 						gobbleSpaces();
 						ch_i = exprICode(index);
 						if(ch_i === termination) { // done parsing
 							closed = true;
 							index++;
+							if(termination === CPAREN_CODE && separator_count && separator_count >= args.length){
+								throwError('Unexpected token ' + String.fromCharCode(termination), index);
+							}
 							break;
 						} else if (ch_i === COMMA_CODE) { // between expressions
 							index++;
+							separator_count++;
+							if(separator_count !== args.length) { // missing argument
+								if(termination === CPAREN_CODE) {
+									throwError('Unexpected token ,', index);
+								}
+								else if(termination === CBRACK_CODE) {
+									for(var arg = args.length; arg< separator_count; arg++) {
+										args.push(null);
+									}
+								}
+							}
 						} else {
 							node = gobbleExpression();
 							if(!node || node.type === COMPOUND) {
@@ -554,7 +585,7 @@ var tmp = {};
 		};
 
 	// To be filled in by the template
-	jsep.version = '0.3.1';
+	jsep.version = '0.3.5';
 	jsep.toString = function() { return 'JavaScript Expression Parser (JSEP) v' + jsep.version; };
 
 	/**
@@ -658,7 +689,16 @@ var tmp = {};
 		return this;
 	};
 
-    root.jsep = jsep;
-}(tmp));
+	// In desktop environments, have a way to restore the old value for `jsep`
+	{
+		// In Node.JS environments
+		if (module.exports) {
+			exports = module.exports = jsep;
+		} else {
+			exports.parse = jsep;
+		}
+	}
+}());
+});
 
-export default tmp.jsep;
+export { jsep as default };

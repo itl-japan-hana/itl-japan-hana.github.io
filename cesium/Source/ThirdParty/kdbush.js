@@ -1,111 +1,32 @@
-function kdbush(points, getX, getY, nodeSize, ArrayType) {
-    return new KDBush(points, getX, getY, nodeSize, ArrayType);
-}
-
-function KDBush(points, getX, getY, nodeSize, ArrayType) {
-    getX = getX || defaultGetX;
-    getY = getY || defaultGetY;
-    ArrayType = ArrayType || Array;
-
-    this.nodeSize = nodeSize || 64;
-    this.points = points;
-
-    this.ids = new ArrayType(points.length);
-    this.coords = new ArrayType(points.length * 2);
-
-    for (var i = 0; i < points.length; i++) {
-        this.ids[i] = i;
-        this.coords[2 * i] = getX(points[i]);
-        this.coords[2 * i + 1] = getY(points[i]);
-    }
-
-    sort(this.ids, this.coords, this.nodeSize, 0, this.ids.length - 1, 0);
-}
-
-KDBush.prototype = {
-    range: function (minX, minY, maxX, maxY) {
-        return range(this.ids, this.coords, minX, minY, maxX, maxY, this.nodeSize);
-    },
-
-    within: function (x, y, r) {
-        return within(this.ids, this.coords, x, y, r, this.nodeSize);
-    }
-};
-
-function defaultGetX(p) { return p[0]; }
-function defaultGetY(p) { return p[1]; }
-
-function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
-    var stack = [0, ids.length - 1, 0];
-    var result = [];
-    var x, y;
-
-    while (stack.length) {
-        var axis = stack.pop();
-        var right = stack.pop();
-        var left = stack.pop();
-
-        if (right - left <= nodeSize) {
-            for (var i = left; i <= right; i++) {
-                x = coords[2 * i];
-                y = coords[2 * i + 1];
-                if (x >= minX && x <= maxX && y >= minY && y <= maxY) result.push(ids[i]);
-            }
-            continue;
-        }
-
-        var m = Math.floor((left + right) / 2);
-
-        x = coords[2 * m];
-        y = coords[2 * m + 1];
-
-        if (x >= minX && x <= maxX && y >= minY && y <= maxY) result.push(ids[m]);
-
-        var nextAxis = (axis + 1) % 2;
-
-        if (axis === 0 ? minX <= x : minY <= y) {
-            stack.push(left);
-            stack.push(m - 1);
-            stack.push(nextAxis);
-        }
-        if (axis === 0 ? maxX >= x : maxY >= y) {
-            stack.push(m + 1);
-            stack.push(right);
-            stack.push(nextAxis);
-        }
-    }
-
-    return result;
-}
-
-function sort(ids, coords, nodeSize, left, right, depth) {
+/* This file is automatically rebuilt by the Cesium build process. */
+function sortKD(ids, coords, nodeSize, left, right, depth) {
     if (right - left <= nodeSize) return;
 
-    var m = Math.floor((left + right) / 2);
+    const m = (left + right) >> 1;
 
     select(ids, coords, m, left, right, depth % 2);
 
-    sort(ids, coords, nodeSize, left, m - 1, depth + 1);
-    sort(ids, coords, nodeSize, m + 1, right, depth + 1);
+    sortKD(ids, coords, nodeSize, left, m - 1, depth + 1);
+    sortKD(ids, coords, nodeSize, m + 1, right, depth + 1);
 }
 
 function select(ids, coords, k, left, right, inc) {
 
     while (right > left) {
         if (right - left > 600) {
-            var n = right - left + 1;
-            var m = k - left + 1;
-            var z = Math.log(n);
-            var s = 0.5 * Math.exp(2 * z / 3);
-            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
-            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
-            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+            const n = right - left + 1;
+            const m = k - left + 1;
+            const z = Math.log(n);
+            const s = 0.5 * Math.exp(2 * z / 3);
+            const sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            const newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            const newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
             select(ids, coords, k, newLeft, newRight, inc);
         }
 
-        var t = coords[2 * k + inc];
-        var i = left;
-        var j = right;
+        const t = coords[2 * k + inc];
+        let i = left;
+        let j = right;
 
         swapItem(ids, coords, left, k);
         if (coords[2 * right + inc] > t) swapItem(ids, coords, left, right);
@@ -136,36 +57,79 @@ function swapItem(ids, coords, i, j) {
 }
 
 function swap(arr, i, j) {
-    var tmp = arr[i];
+    const tmp = arr[i];
     arr[i] = arr[j];
     arr[j] = tmp;
 }
 
-function within(ids, coords, qx, qy, r, nodeSize) {
-    var stack = [0, ids.length - 1, 0];
-    var result = [];
-    var r2 = r * r;
+function range(ids, coords, minX, minY, maxX, maxY, nodeSize) {
+    const stack = [0, ids.length - 1, 0];
+    const result = [];
+    let x, y;
 
     while (stack.length) {
-        var axis = stack.pop();
-        var right = stack.pop();
-        var left = stack.pop();
+        const axis = stack.pop();
+        const right = stack.pop();
+        const left = stack.pop();
 
         if (right - left <= nodeSize) {
-            for (var i = left; i <= right; i++) {
+            for (let i = left; i <= right; i++) {
+                x = coords[2 * i];
+                y = coords[2 * i + 1];
+                if (x >= minX && x <= maxX && y >= minY && y <= maxY) result.push(ids[i]);
+            }
+            continue;
+        }
+
+        const m = Math.floor((left + right) / 2);
+
+        x = coords[2 * m];
+        y = coords[2 * m + 1];
+
+        if (x >= minX && x <= maxX && y >= minY && y <= maxY) result.push(ids[m]);
+
+        const nextAxis = (axis + 1) % 2;
+
+        if (axis === 0 ? minX <= x : minY <= y) {
+            stack.push(left);
+            stack.push(m - 1);
+            stack.push(nextAxis);
+        }
+        if (axis === 0 ? maxX >= x : maxY >= y) {
+            stack.push(m + 1);
+            stack.push(right);
+            stack.push(nextAxis);
+        }
+    }
+
+    return result;
+}
+
+function within(ids, coords, qx, qy, r, nodeSize) {
+    const stack = [0, ids.length - 1, 0];
+    const result = [];
+    const r2 = r * r;
+
+    while (stack.length) {
+        const axis = stack.pop();
+        const right = stack.pop();
+        const left = stack.pop();
+
+        if (right - left <= nodeSize) {
+            for (let i = left; i <= right; i++) {
                 if (sqDist(coords[2 * i], coords[2 * i + 1], qx, qy) <= r2) result.push(ids[i]);
             }
             continue;
         }
 
-        var m = Math.floor((left + right) / 2);
+        const m = Math.floor((left + right) / 2);
 
-        var x = coords[2 * m];
-        var y = coords[2 * m + 1];
+        const x = coords[2 * m];
+        const y = coords[2 * m + 1];
 
         if (sqDist(x, y, qx, qy) <= r2) result.push(ids[m]);
 
-        var nextAxis = (axis + 1) % 2;
+        const nextAxis = (axis + 1) % 2;
 
         if (axis === 0 ? qx - r <= x : qy - r <= y) {
             stack.push(left);
@@ -183,9 +147,40 @@ function within(ids, coords, qx, qy, r, nodeSize) {
 }
 
 function sqDist(ax, ay, bx, by) {
-    var dx = ax - bx;
-    var dy = ay - by;
+    const dx = ax - bx;
+    const dy = ay - by;
     return dx * dx + dy * dy;
 }
 
-export default kdbush;
+const defaultGetX = p => p[0];
+const defaultGetY = p => p[1];
+
+class KDBush {
+    constructor(points, getX = defaultGetX, getY = defaultGetY, nodeSize = 64, ArrayType = Float64Array) {
+        this.nodeSize = nodeSize;
+        this.points = points;
+
+        const IndexArrayType = points.length < 65536 ? Uint16Array : Uint32Array;
+
+        const ids = this.ids = new IndexArrayType(points.length);
+        const coords = this.coords = new ArrayType(points.length * 2);
+
+        for (let i = 0; i < points.length; i++) {
+            ids[i] = i;
+            coords[2 * i] = getX(points[i]);
+            coords[2 * i + 1] = getY(points[i]);
+        }
+
+        sortKD(ids, coords, nodeSize, 0, ids.length - 1, 0);
+    }
+
+    range(minX, minY, maxX, maxY) {
+        return range(this.ids, this.coords, minX, minY, maxX, maxY, this.nodeSize);
+    }
+
+    within(x, y, r) {
+        return within(this.ids, this.coords, x, y, r, this.nodeSize);
+    }
+}
+
+export { KDBush as default };

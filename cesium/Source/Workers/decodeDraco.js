@@ -1,5 +1,5 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './IndexDatatype-1be7d1f8', './createTaskProcessorWorker'], function (when, Check, _Math, RuntimeError, WebGLConstants, ComponentDatatype, IndexDatatype, createTaskProcessorWorker) { 'use strict';
+define(['./ComponentDatatype-9ed50558', './when-8166c7dd', './IndexDatatype-797210ca', './RuntimeError-4fdc4459', './createTaskProcessorWorker', './WebGLConstants-0664004c'], (function (ComponentDatatype, when, IndexDatatype, RuntimeError, createTaskProcessorWorker, WebGLConstants) { 'use strict';
 
   /* global require */
 
@@ -251,11 +251,23 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeErro
     var properties = parameters.properties;
     for (var propertyName in properties) {
       if (properties.hasOwnProperty(propertyName)) {
-        var attributeId = properties[propertyName];
-        var dracoAttribute = dracoDecoder.GetAttributeByUniqueId(
-          dracoPointCloud,
-          attributeId
-        );
+        var dracoAttribute;
+        if (propertyName === "POSITION" || propertyName === "NORMAL") {
+          var dracoAttributeId = dracoDecoder.GetAttributeId(
+            dracoPointCloud,
+            draco[propertyName]
+          );
+          dracoAttribute = dracoDecoder.GetAttribute(
+            dracoPointCloud,
+            dracoAttributeId
+          );
+        } else {
+          var attributeId = properties[propertyName];
+          dracoAttribute = dracoDecoder.GetAttributeByUniqueId(
+            dracoPointCloud,
+            attributeId
+          );
+        }
         result[propertyName] = decodeAttribute(
           dracoPointCloud,
           dracoDecoder,
@@ -274,7 +286,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeErro
     var dracoDecoder = new draco.Decoder();
 
     // Skip all parameter types except generic
-    var attributesToSkip = ["POSITION", "NORMAL", "COLOR", "TEX_COORD"];
+    // Note: As a temporary work-around until GetAttributeByUniqueId() works after
+    // calling SkipAttributeTransform(), we will not skip attributes with multiple
+    // sets of data in the glTF.
+    var attributesToSkip = ["POSITION", "NORMAL"];
+    var compressedAttributes = parameters.compressedAttributes;
+    if (!when.defined(compressedAttributes["COLOR_1"])) {
+      attributesToSkip.push("COLOR");
+    }
+    if (!when.defined(compressedAttributes["TEXCOORD_1"])) {
+      attributesToSkip.push("TEX_COORD");
+    }
     if (parameters.dequantizeInShader) {
       for (var i = 0; i < attributesToSkip.length; ++i) {
         dracoDecoder.SkipAttributeTransform(draco[attributesToSkip[i]]);
@@ -301,15 +323,37 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeErro
     draco.destroy(buffer);
 
     var attributeData = {};
-
-    var compressedAttributes = parameters.compressedAttributes;
     for (var attributeName in compressedAttributes) {
       if (compressedAttributes.hasOwnProperty(attributeName)) {
-        var compressedAttribute = compressedAttributes[attributeName];
-        var dracoAttribute = dracoDecoder.GetAttributeByUniqueId(
-          dracoGeometry,
-          compressedAttribute
-        );
+        // Since GetAttributeByUniqueId() only works on attributes that we have not called
+        // SkipAttributeTransform() on, we must first store a `dracoAttributeName` in case
+        // we call GetAttributeId() instead.
+        var dracoAttributeName = attributeName;
+        if (attributeName === "TEXCOORD_0") {
+          dracoAttributeName = "TEX_COORD";
+        }
+        if (attributeName === "COLOR_0") {
+          dracoAttributeName = "COLOR";
+        }
+
+        var dracoAttribute;
+        if (attributesToSkip.includes(dracoAttributeName)) {
+          var dracoAttributeId = dracoDecoder.GetAttributeId(
+            dracoGeometry,
+            draco[dracoAttributeName]
+          );
+          dracoAttribute = dracoDecoder.GetAttribute(
+            dracoGeometry,
+            dracoAttributeId
+          );
+        } else {
+          var compressedAttribute = compressedAttributes[attributeName];
+          dracoAttribute = dracoDecoder.GetAttributeByUniqueId(
+            dracoGeometry,
+            compressedAttribute
+          );
+        }
+
         attributeData[attributeName] = decodeAttribute(
           dracoGeometry,
           dracoDecoder,
@@ -330,7 +374,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeErro
   }
 
   function decode(parameters) {
-    if (when.defined(parameters.primitive)) {
+    if (when.defined(parameters.bufferView)) {
       return decodePrimitive(parameters);
     }
     return decodePointCloud(parameters);
@@ -367,4 +411,4 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './RuntimeErro
 
   return decodeDraco;
 
-});
+}));

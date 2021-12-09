@@ -7,7 +7,7 @@ import ReferenceFrame from "../Core/ReferenceFrame.js";
 import Property from "./Property.js";
 
 /**
- * A {@link PositionProperty} whose value is an array whose items are the computed value
+ * A {@link Property} whose value is an array whose items are the computed value
  * of other PositionProperty instances.
  *
  * @alias PositionPropertyArray
@@ -176,7 +176,7 @@ PositionPropertyArray.prototype.equals = function (other) {
   return (
     this === other || //
     (other instanceof PositionPropertyArray && //
-    this._referenceFrame === other._referenceFrame && //
+      this._referenceFrame === other._referenceFrame && //
       Property.arrayEquals(this._value, other._value))
   );
 };

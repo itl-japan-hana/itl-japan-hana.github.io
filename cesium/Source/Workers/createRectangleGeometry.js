@@ -1,12 +1,12 @@
 /* This file is automatically rebuilt by the Cesium build process. */
-define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-27e3267e', './Transforms-df227093', './RuntimeError-61701d3e', './WebGLConstants-34c08bc0', './ComponentDatatype-cb08e294', './GeometryAttribute-c6bd73d5', './GeometryAttributes-d6ea8c2b', './AttributeCompression-c6a20ed1', './GeometryPipeline-43170b82', './EncodedCartesian3-fa90d4bd', './IndexDatatype-1be7d1f8', './IntersectionTests-a2506214', './Plane-cd2fd16b', './GeometryOffsetAttribute-9c46b133', './VertexFormat-2df57ea4', './GeometryInstance-daeadf73', './EllipsoidRhumbLine-19c0d22c', './PolygonPipeline-c56b83b8', './RectangleGeometryLibrary-599fa70a'], function (when, Check, _Math, Cartesian2, Transforms, RuntimeError, WebGLConstants, ComponentDatatype, GeometryAttribute, GeometryAttributes, AttributeCompression, GeometryPipeline, EncodedCartesian3, IndexDatatype, IntersectionTests, Plane, GeometryOffsetAttribute, VertexFormat, GeometryInstance, EllipsoidRhumbLine, PolygonPipeline, RectangleGeometryLibrary) { 'use strict';
+define(['./when-8166c7dd', './Matrix2-0e286ffc', './GeometryOffsetAttribute-e8e698d7', './Transforms-de823166', './RuntimeError-4fdc4459', './ComponentDatatype-9ed50558', './GeometryAttribute-83cf1273', './GeometryAttributes-50becc99', './GeometryInstance-520da454', './GeometryPipeline-e071464f', './IndexDatatype-797210ca', './PolygonPipeline-0f92f4e9', './RectangleGeometryLibrary-83f71252', './VertexFormat-c0801687', './combine-a5c4cc47', './WebGLConstants-0664004c', './AttributeCompression-a3d02c34', './EncodedCartesian3-3d8cb924', './IntersectionTests-30f5d388', './Plane-456cf3fd', './EllipsoidRhumbLine-403e6a39'], (function (when, Matrix2, GeometryOffsetAttribute, Transforms, RuntimeError, ComponentDatatype, GeometryAttribute, GeometryAttributes, GeometryInstance, GeometryPipeline, IndexDatatype, PolygonPipeline, RectangleGeometryLibrary, VertexFormat, combine, WebGLConstants, AttributeCompression, EncodedCartesian3, IntersectionTests, Plane, EllipsoidRhumbLine) { 'use strict';
 
-  var positionScratch = new Cartesian2.Cartesian3();
-  var normalScratch = new Cartesian2.Cartesian3();
-  var tangentScratch = new Cartesian2.Cartesian3();
-  var bitangentScratch = new Cartesian2.Cartesian3();
-  var rectangleScratch = new Cartesian2.Rectangle();
-  var stScratch = new Cartesian2.Cartesian2();
+  var positionScratch = new Matrix2.Cartesian3();
+  var normalScratch = new Matrix2.Cartesian3();
+  var tangentScratch = new Matrix2.Cartesian3();
+  var bitangentScratch = new Matrix2.Cartesian3();
+  var rectangleScratch = new Matrix2.Rectangle();
+  var stScratch = new Matrix2.Cartesian2();
   var bottomBoundingSphere = new Transforms.BoundingSphere();
   var topBoundingSphere = new Transforms.BoundingSphere();
 
@@ -65,19 +65,19 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var normal = normalScratch;
     if (vertexFormat.normal || vertexFormat.tangent || vertexFormat.bitangent) {
       for (var i = 0; i < length; i += 3) {
-        var p = Cartesian2.Cartesian3.fromArray(positions, i, positionScratch);
+        var p = Matrix2.Cartesian3.fromArray(positions, i, positionScratch);
         var attrIndex1 = attrIndex + 1;
         var attrIndex2 = attrIndex + 2;
 
         normal = ellipsoid.geodeticSurfaceNormal(p, normal);
         if (vertexFormat.tangent || vertexFormat.bitangent) {
-          Cartesian2.Cartesian3.cross(Cartesian2.Cartesian3.UNIT_Z, normal, tangent);
-          Transforms.Matrix3.multiplyByVector(tangentRotationMatrix, tangent, tangent);
-          Cartesian2.Cartesian3.normalize(tangent, tangent);
+          Matrix2.Cartesian3.cross(Matrix2.Cartesian3.UNIT_Z, normal, tangent);
+          Matrix2.Matrix3.multiplyByVector(tangentRotationMatrix, tangent, tangent);
+          Matrix2.Cartesian3.normalize(tangent, tangent);
 
           if (vertexFormat.bitangent) {
-            Cartesian2.Cartesian3.normalize(
-              Cartesian2.Cartesian3.cross(normal, tangent, bitangent),
+            Matrix2.Cartesian3.normalize(
+              Matrix2.Cartesian3.cross(normal, tangent, bitangent),
               bitangent
             );
           }
@@ -109,8 +109,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     });
   }
 
-  var v1Scratch = new Cartesian2.Cartesian3();
-  var v2Scratch = new Cartesian2.Cartesian3();
+  var v1Scratch = new Matrix2.Cartesian3();
+  var v2Scratch = new Matrix2.Cartesian3();
 
   function calculateAttributesWall(positions, vertexFormat, ellipsoid) {
     var length = positions.length;
@@ -131,17 +131,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var normal = normalScratch;
     if (vertexFormat.normal || vertexFormat.tangent || vertexFormat.bitangent) {
       for (var i = 0; i < length; i += 6) {
-        var p = Cartesian2.Cartesian3.fromArray(positions, i, positionScratch);
-        var p1 = Cartesian2.Cartesian3.fromArray(positions, (i + 6) % length, v1Scratch);
+        var p = Matrix2.Cartesian3.fromArray(positions, i, positionScratch);
+        var p1 = Matrix2.Cartesian3.fromArray(positions, (i + 6) % length, v1Scratch);
         if (recomputeNormal) {
-          var p2 = Cartesian2.Cartesian3.fromArray(positions, (i + 3) % length, v2Scratch);
-          Cartesian2.Cartesian3.subtract(p1, p, p1);
-          Cartesian2.Cartesian3.subtract(p2, p, p2);
-          normal = Cartesian2.Cartesian3.normalize(Cartesian2.Cartesian3.cross(p2, p1, normal), normal);
+          var p2 = Matrix2.Cartesian3.fromArray(positions, (i + 3) % length, v2Scratch);
+          Matrix2.Cartesian3.subtract(p1, p, p1);
+          Matrix2.Cartesian3.subtract(p2, p, p2);
+          normal = Matrix2.Cartesian3.normalize(Matrix2.Cartesian3.cross(p2, p1, normal), normal);
           recomputeNormal = false;
         }
 
-        if (Cartesian2.Cartesian3.equalsEpsilon(p1, p, _Math.CesiumMath.EPSILON10)) {
+        if (Matrix2.Cartesian3.equalsEpsilon(p1, p, ComponentDatatype.CesiumMath.EPSILON10)) {
           // if we've reached a corner
           recomputeNormal = true;
         }
@@ -149,8 +149,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
         if (vertexFormat.tangent || vertexFormat.bitangent) {
           bitangent = ellipsoid.geodeticSurfaceNormal(p, bitangent);
           if (vertexFormat.tangent) {
-            tangent = Cartesian2.Cartesian3.normalize(
-              Cartesian2.Cartesian3.cross(bitangent, normal, tangent),
+            tangent = Matrix2.Cartesian3.normalize(
+              Matrix2.Cartesian3.cross(bitangent, normal, tangent),
               tangent
             );
           }
@@ -848,9 +848,9 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     for (i = 0; i < length - 1; i += 2) {
       upperLeft = i;
       upperRight = (upperLeft + 2) % length;
-      var p1 = Cartesian2.Cartesian3.fromArray(wallPositions, upperLeft * 3, v1Scratch);
-      var p2 = Cartesian2.Cartesian3.fromArray(wallPositions, upperRight * 3, v2Scratch);
-      if (Cartesian2.Cartesian3.equalsEpsilon(p1, p2, _Math.CesiumMath.EPSILON10)) {
+      var p1 = Matrix2.Cartesian3.fromArray(wallPositions, upperLeft * 3, v1Scratch);
+      var p2 = Matrix2.Cartesian3.fromArray(wallPositions, upperRight * 3, v2Scratch);
+      if (Matrix2.Cartesian3.equalsEpsilon(p1, p2, ComponentDatatype.CesiumMath.EPSILON10)) {
         continue;
       }
       lowerLeft = (upperLeft + 1) % length;
@@ -878,16 +878,16 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
   }
 
   var scratchRectanglePoints = [
-    new Cartesian2.Cartesian3(),
-    new Cartesian2.Cartesian3(),
-    new Cartesian2.Cartesian3(),
-    new Cartesian2.Cartesian3(),
+    new Matrix2.Cartesian3(),
+    new Matrix2.Cartesian3(),
+    new Matrix2.Cartesian3(),
+    new Matrix2.Cartesian3(),
   ];
-  var nwScratch = new Cartesian2.Cartographic();
-  var stNwScratch = new Cartesian2.Cartographic();
+  var nwScratch = new Matrix2.Cartographic();
+  var stNwScratch = new Matrix2.Cartographic();
   function computeRectangle(rectangle, granularity, rotation, ellipsoid, result) {
     if (rotation === 0.0) {
-      return Cartesian2.Rectangle.clone(rectangle, result);
+      return Matrix2.Rectangle.clone(rectangle, result);
     }
 
     var computedOptions = RectangleGeometryLibrary.RectangleGeometryLibrary.computeOptions(
@@ -936,7 +936,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       positions[3]
     );
 
-    return Cartesian2.Rectangle.fromCartesianArray(positions, ellipsoid, result);
+    return Matrix2.Rectangle.fromCartesianArray(positions, ellipsoid, result);
   }
 
   /**
@@ -989,10 +989,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var rectangle = options.rectangle;
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("rectangle", rectangle);
-    Cartesian2.Rectangle.validate(rectangle);
+    RuntimeError.Check.typeOf.object("rectangle", rectangle);
+    Matrix2.Rectangle.validate(rectangle);
     if (rectangle.north < rectangle.south) {
-      throw new Check.DeveloperError(
+      throw new RuntimeError.DeveloperError(
         "options.rectangle.north must be greater than or equal to options.rectangle.south"
       );
     }
@@ -1001,13 +1001,13 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var height = when.defaultValue(options.height, 0.0);
     var extrudedHeight = when.defaultValue(options.extrudedHeight, height);
 
-    this._rectangle = Cartesian2.Rectangle.clone(rectangle);
+    this._rectangle = Matrix2.Rectangle.clone(rectangle);
     this._granularity = when.defaultValue(
       options.granularity,
-      _Math.CesiumMath.RADIANS_PER_DEGREE
+      ComponentDatatype.CesiumMath.RADIANS_PER_DEGREE
     );
-    this._ellipsoid = Cartesian2.Ellipsoid.clone(
-      when.defaultValue(options.ellipsoid, Cartesian2.Ellipsoid.WGS84)
+    this._ellipsoid = Matrix2.Ellipsoid.clone(
+      when.defaultValue(options.ellipsoid, Matrix2.Ellipsoid.WGS84)
     );
     this._surfaceHeight = Math.max(height, extrudedHeight);
     this._rotation = when.defaultValue(options.rotation, 0.0);
@@ -1029,8 +1029,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    * @type {Number}
    */
   RectangleGeometry.packedLength =
-    Cartesian2.Rectangle.packedLength +
-    Cartesian2.Ellipsoid.packedLength +
+    Matrix2.Rectangle.packedLength +
+    Matrix2.Ellipsoid.packedLength +
     VertexFormat.VertexFormat.packedLength +
     7;
 
@@ -1045,17 +1045,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   RectangleGeometry.pack = function (value, array, startingIndex) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("value", value);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.typeOf.object("value", value);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
 
-    Cartesian2.Rectangle.pack(value._rectangle, array, startingIndex);
-    startingIndex += Cartesian2.Rectangle.packedLength;
+    Matrix2.Rectangle.pack(value._rectangle, array, startingIndex);
+    startingIndex += Matrix2.Rectangle.packedLength;
 
-    Cartesian2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    Matrix2.Ellipsoid.pack(value._ellipsoid, array, startingIndex);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     VertexFormat.VertexFormat.pack(value._vertexFormat, array, startingIndex);
     startingIndex += VertexFormat.VertexFormat.packedLength;
@@ -1071,8 +1071,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     return array;
   };
 
-  var scratchRectangle = new Cartesian2.Rectangle();
-  var scratchEllipsoid = Cartesian2.Ellipsoid.clone(Cartesian2.Ellipsoid.UNIT_SPHERE);
+  var scratchRectangle = new Matrix2.Rectangle();
+  var scratchEllipsoid = Matrix2.Ellipsoid.clone(Matrix2.Ellipsoid.UNIT_SPHERE);
   var scratchOptions = {
     rectangle: scratchRectangle,
     ellipsoid: scratchEllipsoid,
@@ -1096,16 +1096,16 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   RectangleGeometry.unpack = function (array, startingIndex, result) {
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.defined("array", array);
+    RuntimeError.Check.defined("array", array);
     //>>includeEnd('debug');
 
     startingIndex = when.defaultValue(startingIndex, 0);
 
-    var rectangle = Cartesian2.Rectangle.unpack(array, startingIndex, scratchRectangle);
-    startingIndex += Cartesian2.Rectangle.packedLength;
+    var rectangle = Matrix2.Rectangle.unpack(array, startingIndex, scratchRectangle);
+    startingIndex += Matrix2.Rectangle.packedLength;
 
-    var ellipsoid = Cartesian2.Ellipsoid.unpack(array, startingIndex, scratchEllipsoid);
-    startingIndex += Cartesian2.Ellipsoid.packedLength;
+    var ellipsoid = Matrix2.Ellipsoid.unpack(array, startingIndex, scratchEllipsoid);
+    startingIndex += Matrix2.Ellipsoid.packedLength;
 
     var vertexFormat = VertexFormat.VertexFormat.unpack(
       array,
@@ -1135,8 +1135,8 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       return new RectangleGeometry(scratchOptions);
     }
 
-    result._rectangle = Cartesian2.Rectangle.clone(rectangle, result._rectangle);
-    result._ellipsoid = Cartesian2.Ellipsoid.clone(ellipsoid, result._ellipsoid);
+    result._rectangle = Matrix2.Rectangle.clone(rectangle, result._rectangle);
+    result._ellipsoid = Matrix2.Ellipsoid.clone(ellipsoid, result._ellipsoid);
     result._vertexFormat = VertexFormat.VertexFormat.clone(vertexFormat, result._vertexFormat);
     result._granularity = granularity;
     result._surfaceHeight = surfaceHeight;
@@ -1168,10 +1168,10 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var rectangle = options.rectangle;
 
     //>>includeStart('debug', pragmas.debug);
-    Check.Check.typeOf.object("rectangle", rectangle);
-    Cartesian2.Rectangle.validate(rectangle);
+    RuntimeError.Check.typeOf.object("rectangle", rectangle);
+    Matrix2.Rectangle.validate(rectangle);
     if (rectangle.north < rectangle.south) {
-      throw new Check.DeveloperError(
+      throw new RuntimeError.DeveloperError(
         "options.rectangle.north must be greater than or equal to options.rectangle.south"
       );
     }
@@ -1179,17 +1179,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var granularity = when.defaultValue(
       options.granularity,
-      _Math.CesiumMath.RADIANS_PER_DEGREE
+      ComponentDatatype.CesiumMath.RADIANS_PER_DEGREE
     );
-    var ellipsoid = when.defaultValue(options.ellipsoid, Cartesian2.Ellipsoid.WGS84);
+    var ellipsoid = when.defaultValue(options.ellipsoid, Matrix2.Ellipsoid.WGS84);
     var rotation = when.defaultValue(options.rotation, 0.0);
 
     return computeRectangle(rectangle, granularity, rotation, ellipsoid, result);
   };
 
-  var tangentRotationMatrixScratch = new Transforms.Matrix3();
+  var tangentRotationMatrixScratch = new Matrix2.Matrix3();
   var quaternionScratch = new Transforms.Quaternion();
-  var centerScratch = new Cartesian2.Cartographic();
+  var centerScratch = new Matrix2.Cartographic();
   /**
    * Computes the geometric representation of a rectangle, including its vertices, indices, and a bounding sphere.
    *
@@ -1200,15 +1200,15 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
    */
   RectangleGeometry.createGeometry = function (rectangleGeometry) {
     if (
-      _Math.CesiumMath.equalsEpsilon(
+      ComponentDatatype.CesiumMath.equalsEpsilon(
         rectangleGeometry._rectangle.north,
         rectangleGeometry._rectangle.south,
-        _Math.CesiumMath.EPSILON10
+        ComponentDatatype.CesiumMath.EPSILON10
       ) ||
-      _Math.CesiumMath.equalsEpsilon(
+      ComponentDatatype.CesiumMath.equalsEpsilon(
         rectangleGeometry._rectangle.east,
         rectangleGeometry._rectangle.west,
-        _Math.CesiumMath.EPSILON10
+        ComponentDatatype.CesiumMath.EPSILON10
       )
     ) {
       return undefined;
@@ -1232,21 +1232,21 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
 
     var tangentRotationMatrix = tangentRotationMatrixScratch;
     if (stRotation !== 0 || rotation !== 0) {
-      var center = Cartesian2.Rectangle.center(rectangle, centerScratch);
+      var center = Matrix2.Rectangle.center(rectangle, centerScratch);
       var axis = ellipsoid.geodeticSurfaceNormalCartographic(center, v1Scratch);
       Transforms.Quaternion.fromAxisAngle(axis, -stRotation, quaternionScratch);
-      Transforms.Matrix3.fromQuaternion(quaternionScratch, tangentRotationMatrix);
+      Matrix2.Matrix3.fromQuaternion(quaternionScratch, tangentRotationMatrix);
     } else {
-      Transforms.Matrix3.clone(Transforms.Matrix3.IDENTITY, tangentRotationMatrix);
+      Matrix2.Matrix3.clone(Matrix2.Matrix3.IDENTITY, tangentRotationMatrix);
     }
 
     var surfaceHeight = rectangleGeometry._surfaceHeight;
     var extrudedHeight = rectangleGeometry._extrudedHeight;
-    var extrude = !_Math.CesiumMath.equalsEpsilon(
+    var extrude = !ComponentDatatype.CesiumMath.equalsEpsilon(
       surfaceHeight,
       extrudedHeight,
       0,
-      _Math.CesiumMath.EPSILON2
+      ComponentDatatype.CesiumMath.EPSILON2
     );
 
     computedOptions.lonScalar = 1.0 / rectangleGeometry._rectangle.width;
@@ -1342,17 +1342,17 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     });
   };
 
-  var unrotatedTextureRectangleScratch = new Cartesian2.Rectangle();
-  var points2DScratch = [new Cartesian2.Cartesian2(), new Cartesian2.Cartesian2(), new Cartesian2.Cartesian2()];
-  var rotation2DScratch = new GeometryAttribute.Matrix2();
-  var rectangleCenterScratch = new Cartesian2.Cartographic();
+  var unrotatedTextureRectangleScratch = new Matrix2.Rectangle();
+  var points2DScratch = [new Matrix2.Cartesian2(), new Matrix2.Cartesian2(), new Matrix2.Cartesian2()];
+  var rotation2DScratch = new Matrix2.Matrix2();
+  var rectangleCenterScratch = new Matrix2.Cartographic();
 
   function textureCoordinateRotationPoints(rectangleGeometry) {
     if (rectangleGeometry._stRotation === 0.0) {
       return [0, 0, 0, 1, 1, 0];
     }
 
-    var rectangle = Cartesian2.Rectangle.clone(
+    var rectangle = Matrix2.Rectangle.clone(
       rectangleGeometry._rectangle,
       unrotatedTextureRectangleScratch
     );
@@ -1389,11 +1389,11 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     points2D[2].y = unrotatedTextureRectangle.south;
 
     var boundingRectangle = rectangleGeometry.rectangle;
-    var toDesiredInComputed = GeometryAttribute.Matrix2.fromRotation(
+    var toDesiredInComputed = Matrix2.Matrix2.fromRotation(
       rectangleGeometry._stRotation,
       rotation2DScratch
     );
-    var boundingRectangleCenter = Cartesian2.Rectangle.center(
+    var boundingRectangleCenter = Matrix2.Rectangle.center(
       boundingRectangle,
       rectangleCenterScratch
     );
@@ -1402,7 +1402,7 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
       var point2D = points2D[i];
       point2D.x -= boundingRectangleCenter.longitude;
       point2D.y -= boundingRectangleCenter.latitude;
-      GeometryAttribute.Matrix2.multiplyByVector(toDesiredInComputed, point2D, point2D);
+      Matrix2.Matrix2.multiplyByVector(toDesiredInComputed, point2D, point2D);
       point2D.x += boundingRectangleCenter.longitude;
       point2D.y += boundingRectangleCenter.latitude;
 
@@ -1416,9 +1416,9 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     var maxYCorner = points2D[1];
     var maxXCorner = points2D[2];
     var result = new Array(6);
-    Cartesian2.Cartesian2.pack(minXYCorner, result);
-    Cartesian2.Cartesian2.pack(maxYCorner, result, 2);
-    Cartesian2.Cartesian2.pack(maxXCorner, result, 4);
+    Matrix2.Cartesian2.pack(minXYCorner, result);
+    Matrix2.Cartesian2.pack(maxYCorner, result, 2);
+    Matrix2.Cartesian2.pack(maxXCorner, result, 4);
     return result;
   }
 
@@ -1462,11 +1462,11 @@ define(['./when-e6985d2a', './Check-24cae389', './Math-392d0035', './Cartesian2-
     if (when.defined(offset)) {
       rectangleGeometry = RectangleGeometry.unpack(rectangleGeometry, offset);
     }
-    rectangleGeometry._ellipsoid = Cartesian2.Ellipsoid.clone(rectangleGeometry._ellipsoid);
-    rectangleGeometry._rectangle = Cartesian2.Rectangle.clone(rectangleGeometry._rectangle);
+    rectangleGeometry._ellipsoid = Matrix2.Ellipsoid.clone(rectangleGeometry._ellipsoid);
+    rectangleGeometry._rectangle = Matrix2.Rectangle.clone(rectangleGeometry._rectangle);
     return RectangleGeometry.createGeometry(rectangleGeometry);
   }
 
   return createRectangleGeometry;
 
-});
+}));
