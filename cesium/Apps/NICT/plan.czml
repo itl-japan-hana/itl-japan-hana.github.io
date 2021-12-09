@@ -3,6 +3,12 @@
     "id": "document",
     "name": "planczml",
     "version": "1.0",
+    "clock": {
+      "interval": "2021-10-01T00:00:00Z/2021-10-02T04:00:00Z",
+      "currentTime": "2021-10-01T00:00:00Z",
+      "multiplier": 60,
+      "range": "LOOP_STOP"
+    }
   },
   {
     "id": "0_0",
