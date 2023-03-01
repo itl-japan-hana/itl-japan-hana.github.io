@@ -22,12 +22,15 @@
     <script id="cesium_sandcastle_script">
 		function startup(Cesium) {
 		    'use strict';
-			var viewer = new Cesium.Viewer("cesiumContainer");
-			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-				{ url: "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-				maximumLevel: 18,
-				credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"});
-			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+			var viewer = new Cesium.Viewer("cesiumContainer",
+				{
+					terrainProvider: Cesium.createWorldTerrain(),
+					imageryProvider: new Cesium.UrlTemplateImageryProvider(
+					{ url: "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
+					maximumLevel: 18,
+					credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"})
+				}
+			);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load("network.czml"));
 			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.754813, 35.677730, 150000.0)});
 			Sandcastle.finishedLoading();
