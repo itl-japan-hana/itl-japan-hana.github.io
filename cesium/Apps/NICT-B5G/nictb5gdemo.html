@@ -22,7 +22,7 @@
     <script id="cesium_sandcastle_script">
 		function startup(Cesium) {
 		    'use strict';
-			var viewer = new Cesium.Viewer("cesiumContainer", {shouldAnimate: true,});
+			var viewer = new Cesium.Viewer("cesiumContainer");
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
 				{ url: "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
 				maximumLevel: 18,
