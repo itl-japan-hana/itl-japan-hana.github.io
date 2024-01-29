@@ -22,12 +22,29 @@
     <script id="cesium_sandcastle_script">
 		function startup(Cesium) {
 		    'use strict';
-			var viewer = new Cesium.Viewer("cesiumContainer");
-			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-				{ url: "https://tile.openstreetmap.jp/{style}/{z}/{x}/{y}.png",
-				maximumLevel: 18,
-				credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"});
-			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+			  var viewer = new Cesium.Viewer('mapdiv', {
+				animation : false,
+				baseLayerPicker: false,
+				fullscreenButton: false,
+				geocoder: false,
+				homeButton: false,
+				navigationHelpButton: false,
+				sceneModePicker: false,
+				scene3DOnly: true,
+				timeline: false,
+				imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+				  url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
+				}),
+				terrainProvider: new Cesium.JapanGSITerrainProvider({
+				  heightPower: 1.0
+				})
+			  });
+			<!-- var viewer = new Cesium.Viewer("cesiumContainer"); --!>
+			<!-- var imgPrvdr = new Cesium.UrlTemplateImageryProvider( --!>
+			<!-- 	{ url: "https://tile.openstreetmap.jp/{style}/{z}/{x}/{y}.png", --!>
+			<!-- 	maximumLevel: 18, --!>
+			<!-- 	credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"}); --!>
+			<!-- var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr); --!>
 			viewer.dataSources.add(Cesium.CzmlDataSource.load("adbusdemo.czml"));
 			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(140.09876304, 36.11034297, 15000.0)});
 			Sandcastle.finishedLoading();
