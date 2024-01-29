@@ -16,9 +16,7 @@
     "model":{
       "gltf":"https://itl-japan-hana.github.io/cesium/Apps/TKB/GroundVehicle.glb",
       "minimumPixelSize":100,
-      "maximumScale":20,
-      "colorBlendAmount":1,
-      "colorBlendMode":"MIX",
+      "maximumScale":20
     },
     "orientation":{
       "velocityReference":"#position"
