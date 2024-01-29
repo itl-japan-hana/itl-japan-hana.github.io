@@ -23,15 +23,15 @@
 		function startup(Cesium) {
 		    'use strict';
 			  var viewer = new Cesium.Viewer('mapdiv', {
-				animation : false,
+				animation : true,
 				baseLayerPicker: false,
-				fullscreenButton: false,
-				geocoder: false,
-				homeButton: false,
-				navigationHelpButton: false,
-				sceneModePicker: false,
+				fullscreenButton: true,
+				geocoder: true,
+				homeButton: true,
+				navigationHelpButton: true,
+				sceneModePicker: true,
 				scene3DOnly: true,
-				timeline: false,
+				timeline: true,
 				imageryProvider: new Cesium.OpenStreetMapImageryProvider({
 				  url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
 				}),
