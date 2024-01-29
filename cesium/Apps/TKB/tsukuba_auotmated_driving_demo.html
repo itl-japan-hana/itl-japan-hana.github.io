@@ -8,7 +8,7 @@
       content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
     />
     <meta name="cesium-sandcastle-labels" content="CZML">
-    <title>NICT DRM Network Demo</title>
+    <title>Tsukuba Automated Driving Vehicle Demo</title>
     <script type="text/javascript" src="../../Apps/Sandcastle/Sandcastle-header.js"></script>
     <script type="text/javascript" src="../../Build/CesiumUnminified/Cesium.js"></script>
   </head>
@@ -29,7 +29,7 @@
 				credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"});
 			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load("adbusdemo.czml"));
-			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(140.09876304, 36.11034297, 150000.0)});
+			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(140.09876304, 36.11034297, 15000.0)});
 			Sandcastle.finishedLoading();
 		}
 		if (typeof Cesium !== 'undefined') {
