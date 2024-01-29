@@ -14,7 +14,7 @@
     "id":"000000026945_44_0",
     "availability":"2024-01-26T11:39:00Z/2024-01-26T12:11:00Z",
     "model":{
-      "gltf":"../../Apps/SampleData/models/GroundVehicle/GroundVehicle.glb",
+      "gltf":"../Apps/SampleData/models/GroundVehicle/GroundVehicle.glb",
       "minimumPixelSize":100,
       "maximumScale":20
     },
