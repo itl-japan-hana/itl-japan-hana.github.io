@@ -25,7 +25,7 @@
 			var viewer = new Cesium.Viewer('cesiumContainer');
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
 				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-				maximumLevel: 18,
+				tilingScheme : new Cesium.GeographicTilingScheme(),
 				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html'
 				});
 			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
