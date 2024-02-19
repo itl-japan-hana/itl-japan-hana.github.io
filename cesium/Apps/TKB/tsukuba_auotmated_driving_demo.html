@@ -27,7 +27,7 @@
                 scene.imageryLayers.removeAll();
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
 				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html'
+				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html',
 				});
 			viewer.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load('adbusdemo.czml'));
