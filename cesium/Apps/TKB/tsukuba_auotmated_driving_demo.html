@@ -25,10 +25,9 @@
 			var viewer = new Cesium.Viewer('cesiumContainer');
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
 				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-				tilingScheme : new Cesium.GeographicTilingScheme(),
 				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html'
 				});
-			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+			var curimg = viewer.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load('adbusdemo.czml'));
 			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(140.09876304, 36.11034297, 15000.0)});
 			Sandcastle.finishedLoading();
