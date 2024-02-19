@@ -37,6 +37,8 @@
 		if (typeof Cesium !== 'undefined') {
 			window.startupCalled = true;
 			startup(Cesium);
+		} else if (typeof require == "function") {
+			require(["Cesium"], startup);
 		}
     </script>
   </body>
