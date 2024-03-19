@@ -24,7 +24,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -55,7 +55,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -81,7 +81,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -121,7 +121,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -162,7 +162,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -206,7 +206,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
@@ -246,7 +246,7 @@
         "material": {
             "solidColor": {
                 "color": {
-                    "rgba": [0,0,225,225]
+                    "rgba": [225,0,0,225]
                 }
             }
         }
