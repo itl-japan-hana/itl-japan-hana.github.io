@@ -22,19 +22,23 @@
     <script id="cesium_sandcastle_script">
 		function startup(Cesium) {
 		    'use strict';
-			var viewer = new Cesium.Viewer("cesiumContainer");
-			var imgPrvdr = new Cesium.UrlTemplateImageryProvider(
-				{ url: "https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-				maximumLevel: 18,
-				credit: "国土地理院 https://maps.gsi.go.jp/development/ichiran.html"});
-			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
-			viewer.dataSources.add(Cesium.CzmlDataSource.load("visualize_evacuation_demo.czml"));
-			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(136.61282010724918, 35.36021031620329, 150000.0)});
+			var viewer = new Cesium.Viewer('cesiumContainer');
+			var scene = viewer.scene;
+                scene.imageryLayers.removeAll();
+			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
+				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html',
+				});
+			viewer.imageryLayers.addImageryProvider(imgPrvdr);
+			viewer.dataSources.add(Cesium.CzmlDataSource.load('visualize_evacuation_demo.czml'));
+			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(136.61282010724918, 35.36021031620329, 15000.0)});
 			Sandcastle.finishedLoading();
 		}
 		if (typeof Cesium !== 'undefined') {
 			window.startupCalled = true;
 			startup(Cesium);
+		} else if (typeof require == "function") {
+			require(["Cesium"], startup);
 		}
     </script>
   </body>
