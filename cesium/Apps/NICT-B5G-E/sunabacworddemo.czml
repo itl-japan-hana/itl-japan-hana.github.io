@@ -15,7 +15,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -289,7 +293,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -529,7 +537,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -761,7 +773,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -999,7 +1015,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -1261,7 +1281,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -1538,7 +1562,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -1808,7 +1836,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -2072,7 +2104,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -2351,7 +2387,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -2631,7 +2671,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -2908,7 +2952,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -3180,7 +3228,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -3418,7 +3470,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -3687,7 +3743,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -3964,7 +4024,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -4242,7 +4306,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -4479,7 +4547,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -4763,7 +4835,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -5035,7 +5111,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -5319,7 +5399,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -5560,7 +5644,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -5846,7 +5934,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -6124,7 +6216,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -6403,7 +6499,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -6641,7 +6741,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -6915,7 +7019,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -7197,7 +7305,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -7481,7 +7593,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -7756,7 +7872,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -8037,7 +8157,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -8325,7 +8449,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -8609,7 +8737,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -8848,7 +8980,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -9137,7 +9273,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -9410,7 +9550,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -9693,7 +9837,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -9933,7 +10081,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -10219,7 +10371,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -10499,7 +10655,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -10789,7 +10949,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -11071,7 +11235,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -11359,7 +11527,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -11600,7 +11772,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -11888,7 +12064,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -12177,7 +12357,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -12462,7 +12646,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -12699,7 +12887,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -12985,7 +13177,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -13275,7 +13471,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -13559,7 +13759,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -13800,7 +14004,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -14087,7 +14295,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -14372,7 +14584,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -14657,7 +14873,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -14894,7 +15114,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -15184,7 +15408,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -15519,7 +15747,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -15801,7 +16033,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -16040,7 +16276,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -16326,7 +16566,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -16614,7 +16858,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -16897,7 +17145,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -17176,7 +17428,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -17464,7 +17720,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -17751,7 +18011,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -18092,7 +18356,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -18331,7 +18599,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -18614,7 +18886,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -18895,7 +19171,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -19181,7 +19461,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -19421,7 +19705,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -19707,7 +19995,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
@@ -19993,7 +20285,11 @@
     "availability":"2021-10-01T00:00:00Z/2021-10-01T01:00:00Z",
     "model":{
       "gltf":"../../Apps/SampleData/models/CesiumMan/Cesium_Man.glb",
-      "runAnimations":"false"
+      "minimumPixelSize":50,
+      "maximumScale":10
+    },
+    "orientation":{
+      "velocityReference":"#position"
     },
     "position":{
       "epoch":"2021-10-01T00:00:00Z",
