@@ -23,12 +23,13 @@
 		function startup(Cesium) {
 		    'use strict';
 			var viewer = new Cesium.Viewer('cesiumContainer');
+			var scene = viewer.scene;
+                scene.imageryLayers.removeAll();
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
 				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-				maximumLevel: 18,
-				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html'
+				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html',
 				});
-			var curimg = viewer.scene.imageryLayers.addImageryProvider(imgPrvdr);
+			viewer.imageryLayers.addImageryProvider(imgPrvdr);
 			viewer.dataSources.add(Cesium.CzmlDataSource.load('sunaba_cword_demo.czml'));
 			viewer.camera.flyTo({destination : Cesium.Cartesian3.fromDegrees(139.48639177641775, 35.30952324595587, 15000.0)});
 			Sandcastle.finishedLoading();
@@ -36,6 +37,8 @@
 		if (typeof Cesium !== 'undefined') {
 			window.startupCalled = true;
 			startup(Cesium);
+		} else if (typeof require == "function") {
+			require(["Cesium"], startup);
 		}
     </script>
   </body>
