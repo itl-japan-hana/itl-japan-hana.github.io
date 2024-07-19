@@ -26,7 +26,8 @@
 			var scene = viewer.scene;
                 scene.imageryLayers.removeAll();
 			var imgPrvdr = new Cesium.UrlTemplateImageryProvider({
-				url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+				url: 'https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/{z}/{x}/{y}.jpg',
+				<!-- url: 'https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',  --!> 
 				credit: 'GSI Maps https://maps.gsi.go.jp/development/ichiran.html',
 				});
 			viewer.imageryLayers.addImageryProvider(imgPrvdr);
